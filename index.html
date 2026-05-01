@@ -883,11 +883,16 @@
       overflow: visible;
     }
 
+    .drop-zone {
+      --zone-bin-piece-size: var(--bin-piece-size);
+      --zone-bin-piece-gap: var(--bin-piece-gap);
+    }
+
     .bin-items .piece {
-      width: var(--bin-piece-size);
-      height: var(--bin-piece-size);
-      border-radius: calc(var(--bin-piece-size) * 0.22);
-      font-size: calc(var(--bin-piece-size) * 0.88);
+      width: var(--zone-bin-piece-size, var(--bin-piece-size));
+      height: var(--zone-bin-piece-size, var(--bin-piece-size));
+      border-radius: calc(var(--zone-bin-piece-size, var(--bin-piece-size)) * 0.22);
+      font-size: calc(var(--zone-bin-piece-size, var(--bin-piece-size)) * 0.88);
       box-shadow: 0 5px 0 rgba(37, 62, 104, 0.10), 0 8px 14px rgba(37, 62, 104, 0.08);
     }
 
@@ -1083,7 +1088,7 @@
       height: 100%;
       display: flex;
       flex-wrap: wrap;
-      gap: var(--bin-piece-gap);
+      gap: var(--zone-bin-piece-gap, var(--bin-piece-gap));
       align-content: center;
       justify-content: center;
       align-items: center;
@@ -1120,11 +1125,12 @@
 
     .drop-zone.plate .drop-pad,
     .drop-zone.tray .drop-pad {
-      left: 8%;
-      right: 8%;
-      bottom: 11%;
-      height: 60%;
-      border-radius: 50%;
+      left: 6%;
+      right: 6%;
+      bottom: 9%;
+      height: 64%;
+      border-radius: 42% / 50%;
+      padding: 7px 10px;
       background: rgba(255,255,255,0.36);
     }
 
@@ -1949,6 +1955,7 @@
       };
 
       let saveQueued = false;
+      let binFitQueued = false;
 
       const $ = (id) => document.getElementById(id);
 
@@ -2033,6 +2040,7 @@
           if (!state.current) return;
           setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
           renderPieces();
+          scheduleActualBinFit();
           saveStateDebounced();
         });
       }
@@ -2234,15 +2242,15 @@
 
         const containerKey = state.current?.material?.containerClass || "plate";
         const padFactor = getPadFactor(containerKey);
-        const padWidth = zoneWidth * padFactor.w;
-        const padHeight = containerHeight * padFactor.h;
+        const padWidth = Math.max(40, zoneWidth * padFactor.w - 24);
+        const padHeight = Math.max(40, containerHeight * padFactor.h - 24);
 
         let desiredBin = quotient <= 2 ? 104 : quotient <= 4 ? 96 : quotient <= 6 ? 88 : quotient <= 10 ? 80 : quotient <= 14 ? 74 : 70;
         if (divisor >= 7) desiredBin = Math.min(desiredBin, 84);
         if (viewW <= 1280) desiredBin = Math.min(desiredBin, quotient <= 4 ? 78 : 70);
 
-        const binSize = Math.round(findLargestFittingPiece(quotient, padWidth, padHeight, desiredBin));
-        const binGap = Math.max(5, Math.round(binSize * 0.10));
+        const binSize = Math.round(findLargestFittingPiece(quotient, padWidth, padHeight, desiredBin, 30));
+        const binGap = Math.max(4, Math.round(binSize * 0.08));
 
         const game = $("gameScreen");
         game.style.setProperty("--piece-size", `${sourceSize}px`);
@@ -2269,15 +2277,75 @@
         return factors[containerKey] || factors.plate;
       }
 
-      function findLargestFittingPiece(count, padWidth, padHeight, desired) {
-        for (let size = desired; size >= 46; size -= 1) {
-          const gap = Math.max(5, Math.round(size * 0.10));
-          const columns = Math.max(1, Math.floor((padWidth + gap) / (size + gap)));
-          const rows = Math.ceil(count / columns);
-          const usedHeight = rows * size + Math.max(0, rows - 1) * gap;
-          if (usedHeight <= padHeight) return size;
+      function findLargestFittingPiece(count, padWidth, padHeight, desired, minSize = 30) {
+        const itemCount = Math.max(1, Math.ceil(Number(count) || 1));
+        const width = Math.max(24, Number(padWidth) || 24);
+        const height = Math.max(24, Number(padHeight) || 24);
+        const start = Math.max(minSize, Math.floor(Number(desired) || minSize));
+        for (let size = start; size >= minSize; size -= 1) {
+          const gap = Math.max(3, Math.round(size * 0.08));
+          const columns = Math.max(1, Math.floor((width + gap) / (size + gap)));
+          const rows = Math.max(1, Math.floor((height + gap) / (size + gap)));
+          if (columns * rows >= itemCount) return size;
         }
-        return 46;
+        return minSize;
+      }
+
+      function scheduleActualBinFit() {
+        if (binFitQueued) return;
+        binFitQueued = true;
+        requestAnimationFrame(() => {
+          binFitQueued = false;
+          fitBinPiecesToActualPads();
+        });
+      }
+
+      function fitBinPiecesToActualPads() {
+        if (!state.current || getActiveScreenId() !== "gameScreen") return;
+        const game = $("gameScreen");
+        const zones = Array.from(document.querySelectorAll(".drop-zone"));
+        if (!game || zones.length === 0) return;
+
+        const counts = getBinCounts();
+        const expectedCount = Math.max(1, Number(state.current.quotient) || 1);
+        const baseSize = Number.parseFloat(getComputedStyle(game).getPropertyValue("--bin-piece-size")) || 64;
+
+        zones.forEach((zone, index) => {
+          const pad = zone.querySelector(".drop-pad");
+          if (!pad) return;
+          const rect = pad.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const styles = getComputedStyle(pad);
+          let innerWidth = rect.width - px(styles.paddingLeft) - px(styles.paddingRight) - 8;
+          let innerHeight = rect.height - px(styles.paddingTop) - px(styles.paddingBottom) - 8;
+
+          // 둥근 접시·쟁반·어항·유리컵은 가장자리에서 잘릴 수 있어 보이는 안쪽 면적을 더 보수적으로 봅니다.
+          if (zone.classList.contains("plate") || zone.classList.contains("tray")) {
+            innerWidth *= 0.86;
+            innerHeight *= 0.78;
+          }
+          if (zone.classList.contains("fishbowl") || zone.classList.contains("jar")) {
+            innerWidth *= 0.90;
+            innerHeight *= 0.88;
+          }
+
+          const countToFit = Math.max(expectedCount, Number(counts[index]) || 0, 1);
+          const minSize = countToFit >= 10 ? 24 : countToFit >= 8 ? 28 : 32;
+          let fittedSize = findLargestFittingPiece(countToFit, innerWidth, innerHeight, baseSize, minSize);
+
+          if (["strawberry", "candy", "carnation", "fish", "balloon", "pencil", "cookie", "block"].includes(state.current.material.key)) {
+            fittedSize = Math.max(minSize, fittedSize - 2);
+          }
+
+          const fittedGap = Math.max(2, Math.round(fittedSize * 0.07));
+          zone.style.setProperty("--zone-bin-piece-size", `${Math.round(fittedSize)}px`);
+          zone.style.setProperty("--zone-bin-piece-gap", `${fittedGap}px`);
+        });
+      }
+
+      function px(value) {
+        const num = Number.parseFloat(value);
+        return Number.isFinite(num) ? num : 0;
       }
 
       function clampNumber(value, min, max) {
@@ -2480,6 +2548,7 @@
         });
         if (state.current) setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
         updateAnswerPanel();
+        scheduleActualBinFit();
       }
 
       function getBinCounts() {
@@ -2785,8 +2854,8 @@
           <div class="calc-card">
             <div class="calc-row"><span>미션 점수 합계</span><span class="value">${missionScore.toLocaleString("ko-KR")}점</span></div>
             <div class="calc-row"><span>20개 완주 보너스</span><span class="value">${completeBonus.toLocaleString("ko-KR")}점</span></div>
-            <div class="calc-row"><span>협동 점수 직접 입력</span><span><input id="coopBonusInput" class="bonus-input" type="number" min="0" max="9999" step="10" value="0" aria-label="협동 점수" /> 점</span></div>
-            <div class="calc-row"><span>점수 계산 방법</span><span class="value">레벨 + 숫자 + 시간 + 협동</span></div>
+            <div class="calc-row"><span>협동 점수 직접 입력 <small style="color:#687386;font-weight:1000;">(최대 100점)</small></span><span><input id="coopBonusInput" class="bonus-input" type="number" min="0" max="100" step="1" value="0" aria-label="협동 점수, 최대 100점" /> 점</span></div>
+            <div class="calc-row"><span>점수 계산 방법</span><span class="value">레벨 + 숫자 + 시간 + 협동(최대 100)</span></div>
           </div>
           <div class="final-score-line">최종 점수 <strong id="finalScoreText">${(missionScore + completeBonus).toLocaleString("ko-KR")}</strong> 점</div>
           <div class="log-wrap">
@@ -2801,9 +2870,16 @@
 
         const input = $("coopBonusInput");
         input.addEventListener("input", () => {
-          const bonus = Math.max(0, Number(input.value) || 0);
+          const raw = Number(input.value);
+          const bonus = clampNumber(Number.isFinite(raw) ? Math.round(raw) : 0, 0, 100);
+          if (input.value !== "" && raw !== bonus) input.value = String(bonus);
           $("finalScoreText").textContent = (missionScore + completeBonus + bonus).toLocaleString("ko-KR");
           saveStateDebounced();
+        });
+        input.addEventListener("blur", () => {
+          const bonus = clampNumber(Number(input.value) || 0, 0, 100);
+          input.value = String(bonus);
+          $("finalScoreText").textContent = (missionScore + completeBonus + bonus).toLocaleString("ko-KR");
         });
 
         const canContinue = state.current && !state.current.solved && completed < MAX_MISSIONS;
