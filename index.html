@@ -1,0 +1,2337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>너 이거 할 수 있어? | 나눗셈 놀이</title>
+  <style>
+    :root {
+      --bg1: #f1fbff;
+      --bg2: #fff7dd;
+      --ink: #172033;
+      --muted: #667085;
+      --navy: #243b64;
+      --teal: #08b8c8;
+      --teal-dark: #04889a;
+      --yellow: #ffe177;
+      --orange: #ff8a4c;
+      --pink: #ff6aa2;
+      --green: #37bd7c;
+      --blue: #5c8dff;
+      --purple: #8f6cff;
+      --danger: #f45d5d;
+      --card: rgba(255, 255, 255, 0.88);
+      --line: rgba(35, 59, 100, 0.15);
+      --shadow: 0 18px 45px rgba(36, 59, 100, 0.17);
+      --radius: 28px;
+      --focus: 0 0 0 5px rgba(8, 184, 200, 0.23);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 5%, rgba(255, 225, 119, 0.85) 0 180px, transparent 181px),
+        radial-gradient(circle at 92% 10%, rgba(8, 184, 200, 0.28) 0 220px, transparent 221px),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      filter: blur(8px);
+    }
+
+    body::before {
+      left: -90px;
+      bottom: -90px;
+      background: rgba(143, 108, 255, 0.18);
+    }
+
+    body::after {
+      right: -100px;
+      bottom: 8%;
+      background: rgba(255, 106, 162, 0.16);
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .screen {
+      min-height: 100vh;
+      padding: clamp(18px, 3vw, 36px);
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .start-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-card {
+      width: min(1060px, 100%);
+      min-height: min(720px, calc(100vh - 56px));
+      background: rgba(255,255,255,0.78);
+      border: 3px solid rgba(36,59,100,0.10);
+      border-radius: 42px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(22px, 4vw, 44px);
+      align-items: center;
+      padding: clamp(28px, 5vw, 64px);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .start-card::before {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      border: 2px dashed rgba(8,184,200,0.22);
+      border-radius: 34px;
+      pointer-events: none;
+    }
+
+    .school-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: white;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      box-shadow: 0 8px 22px rgba(36,59,100,0.2);
+    }
+
+    .school-chip .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 5px rgba(8,184,200,0.25);
+    }
+
+    .start-title {
+      margin: 26px 0 14px;
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      color: var(--navy);
+      text-shadow: 0 8px 0 rgba(255,225,119,0.95);
+    }
+
+    .start-title span {
+      color: var(--teal-dark);
+    }
+
+    .start-subtitle {
+      margin: 0 0 24px;
+      font-size: clamp(18px, 2vw, 25px);
+      color: #334155;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .start-subtitle strong {
+      color: var(--orange);
+    }
+
+    .start-actions {
+      display: grid;
+      gap: 14px;
+      max-width: 520px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .team-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 22px;
+      background: white;
+      border: 2px solid rgba(36,59,100,0.10);
+      box-shadow: 0 10px 24px rgba(36,59,100,0.08);
+    }
+
+    .team-input-wrap label {
+      flex: 0 0 auto;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .team-input-wrap input {
+      min-width: 0;
+      flex: 1 1 auto;
+      border: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      padding: 10px;
+      border-radius: 14px;
+      background: #f8fbff;
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn,
+    .danger-btn,
+    .mini-btn {
+      min-height: 48px;
+      border-radius: 999px;
+      padding: 13px 20px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+      user-select: none;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--teal), #2adad7);
+      color: white;
+      box-shadow: 0 12px 0 #047988, 0 20px 32px rgba(8,184,200,0.28);
+      font-size: 22px;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: var(--navy);
+      border: 2px solid rgba(36,59,100,0.12);
+      box-shadow: 0 10px 24px rgba(36,59,100,0.10);
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,0.62);
+      color: var(--navy);
+      border: 2px dashed rgba(36,59,100,0.20);
+    }
+
+    .danger-btn {
+      background: linear-gradient(135deg, #ff766e, #ff9d58);
+      color: white;
+      box-shadow: 0 8px 0 #cf4b4b, 0 16px 24px rgba(244,93,93,0.25);
+    }
+
+    .mini-btn {
+      min-height: 38px;
+      padding: 9px 14px;
+      font-size: 14px;
+      background: #eef6ff;
+      color: var(--navy);
+      border: 1px solid rgba(36,59,100,0.10);
+    }
+
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .ghost-btn:hover,
+    .danger-btn:hover,
+    .mini-btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.05);
+    }
+
+    .primary-btn:active,
+    .secondary-btn:active,
+    .ghost-btn:active,
+    .danger-btn:active,
+    .mini-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 0 rgba(0,0,0,0.18);
+    }
+
+    .start-visual {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .challenge-board {
+      border-radius: 32px;
+      background: linear-gradient(180deg, #fff 0%, #f4fbff 100%);
+      border: 4px solid var(--navy);
+      box-shadow: 0 14px 0 rgba(36,59,100,0.18);
+      padding: clamp(20px, 3vw, 34px);
+      transform: rotate(1.5deg);
+      position: relative;
+    }
+
+    .challenge-board::before {
+      content: "3  2  1";
+      position: absolute;
+      top: -22px;
+      right: 28px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 30px;
+      font-weight: 1000;
+      padding: 6px 18px;
+      border: 3px solid var(--navy);
+      border-radius: 20px;
+      transform: rotate(4deg);
+      box-shadow: 0 8px 0 rgba(36,59,100,0.13);
+    }
+
+    .visual-formula {
+      font-size: clamp(46px, 5vw, 70px);
+      font-weight: 1000;
+      color: var(--navy);
+      text-align: center;
+      margin: 12px 0 20px;
+      letter-spacing: -0.05em;
+    }
+
+    .mini-items {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+      margin: 0 auto;
+      max-width: 420px;
+    }
+
+    .mini-item {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: white;
+      border: 2px solid rgba(36,59,100,0.12);
+      box-shadow: inset 0 -4px 0 rgba(36,59,100,0.07);
+      font-size: 26px;
+    }
+
+    .start-note {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.74);
+      border: 2px solid rgba(8,184,200,0.20);
+      border-radius: 22px;
+      padding: 16px;
+      font-weight: 800;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .countdown-screen {
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at center, rgba(255,225,119,0.8), transparent 42%),
+        linear-gradient(135deg, #093a55, #10315d 48%, #22124f);
+      color: white;
+      overflow: hidden;
+    }
+
+    .countdown-box {
+      width: min(820px, 100%);
+      text-align: center;
+      position: relative;
+    }
+
+    .countdown-label {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 22px;
+      background: rgba(255,255,255,0.13);
+      border: 2px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      font-weight: 950;
+      color: #e7fbff;
+      backdrop-filter: blur(10px);
+    }
+
+    .countdown-number {
+      margin: 36px auto 22px;
+      width: clamp(190px, 38vw, 360px);
+      height: clamp(190px, 38vw, 360px);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: clamp(100px, 21vw, 230px);
+      line-height: 1;
+      font-weight: 1000;
+      color: var(--navy);
+      background: linear-gradient(160deg, #fff, #ffe37d);
+      border: 10px solid rgba(255,255,255,0.9);
+      box-shadow: 0 30px 0 rgba(0,0,0,0.22), 0 0 80px rgba(255,225,119,0.42);
+      animation: pulseIn 0.72s ease both;
+    }
+
+    .countdown-number.go {
+      font-size: clamp(54px, 10vw, 118px);
+      background: linear-gradient(160deg, #eafff9, #59ffd8);
+    }
+
+    @keyframes pulseIn {
+      0% { transform: scale(0.55) rotate(-7deg); opacity: 0; }
+      60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .countdown-sub {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 44px);
+      font-weight: 1000;
+      letter-spacing: -0.04em;
+      text-shadow: 0 4px 0 rgba(0,0,0,0.18);
+    }
+
+    .game-screen {
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 8px 0 4px;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .game-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 22px;
+      padding: 12px 16px;
+      background: var(--navy);
+      color: white;
+      font-weight: 1000;
+      box-shadow: 0 10px 24px rgba(36,59,100,0.2);
+      white-space: nowrap;
+    }
+
+    .game-title-badge .bolt {
+      color: var(--yellow);
+      font-size: 24px;
+    }
+
+    .team-name {
+      min-width: 0;
+      color: #475569;
+      font-weight: 900;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hud {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .hud-card {
+      min-width: 96px;
+      padding: 9px 13px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.86);
+      border: 2px solid rgba(36,59,100,0.09);
+      box-shadow: 0 10px 24px rgba(36,59,100,0.08);
+      text-align: center;
+    }
+
+    .hud-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+
+    .hud-card strong {
+      font-size: 22px;
+      font-weight: 1000;
+      color: var(--navy);
+      letter-spacing: -0.04em;
+    }
+
+    .progress-strip {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      gap: 5px;
+      width: 100%;
+      background: rgba(255,255,255,0.55);
+      padding: 8px;
+      border-radius: 18px;
+      border: 1px solid rgba(36,59,100,0.08);
+    }
+
+    .progress-tile {
+      height: 12px;
+      border-radius: 99px;
+      background: rgba(36,59,100,0.12);
+      overflow: hidden;
+    }
+
+    .progress-tile.done {
+      background: linear-gradient(90deg, var(--teal), #4de0a1);
+    }
+
+    .progress-tile.current {
+      background: linear-gradient(90deg, var(--yellow), var(--orange));
+      box-shadow: 0 0 0 3px rgba(255,138,76,0.18);
+    }
+
+    .mission-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 410px) minmax(0, 1fr);
+      gap: clamp(16px, 2.2vw, 28px);
+      align-items: start;
+      flex: 1 1 auto;
+    }
+
+    .problem-panel,
+    .play-panel {
+      background: var(--card);
+      border: 2px solid rgba(36,59,100,0.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .problem-panel {
+      padding: clamp(18px, 2.4vw, 26px);
+      display: grid;
+      gap: 16px;
+      position: sticky;
+      top: 94px;
+    }
+
+    .problem-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .level-pill,
+    .material-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 1000;
+      font-size: 14px;
+    }
+
+    .level-pill {
+      background: #fff5d4;
+      color: #8a4a00;
+      border: 2px solid rgba(255,138,76,0.22);
+    }
+
+    .material-pill {
+      background: #eafcff;
+      color: #036c78;
+      border: 2px solid rgba(8,184,200,0.22);
+    }
+
+    .expression-card {
+      border-radius: 26px;
+      background: linear-gradient(145deg, #ffffff, #f4f9ff);
+      border: 3px solid rgba(36,59,100,0.12);
+      padding: 18px;
+      text-align: center;
+      box-shadow: inset 0 -8px 0 rgba(36,59,100,0.04);
+    }
+
+    .expression-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: white;
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .expression-main {
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.05;
+      font-weight: 1000;
+      color: var(--navy);
+      letter-spacing: -0.06em;
+    }
+
+    .expression-sub {
+      margin-top: 8px;
+      font-size: 22px;
+      font-weight: 1000;
+      color: var(--teal-dark);
+    }
+
+    .mission-sentence {
+      margin: 0;
+      padding: 16px;
+      border-radius: 20px;
+      background: #fffbe9;
+      border: 2px solid rgba(255,225,119,0.68);
+      line-height: 1.52;
+      font-size: 17px;
+      font-weight: 850;
+      color: #334155;
+    }
+
+    .mission-sentence strong {
+      color: var(--orange);
+      font-weight: 1000;
+    }
+
+    .tip-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 14px;
+      border-radius: 20px;
+      background: #f4fbff;
+      border: 2px dashed rgba(8,184,200,0.24);
+      color: #475569;
+      line-height: 1.45;
+      font-weight: 800;
+    }
+
+    .tip-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--teal);
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 6px 0 rgba(8,136,154,0.18);
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .control-row .primary-btn,
+    .control-row .secondary-btn,
+    .control-row .ghost-btn {
+      flex: 1 1 150px;
+      font-size: 16px;
+      min-height: 50px;
+      box-shadow: 0 8px 0 rgba(36,59,100,0.14), 0 15px 24px rgba(36,59,100,0.08);
+    }
+
+    .feedback {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.74);
+      border: 2px solid rgba(36,59,100,0.08);
+      font-weight: 900;
+      color: #475569;
+      line-height: 1.35;
+    }
+
+    .feedback.info { border-color: rgba(92,141,255,0.25); background: #f1f6ff; }
+    .feedback.warn { border-color: rgba(255,138,76,0.28); background: #fff8ed; color: #9a4b00; }
+    .feedback.good { border-color: rgba(55,189,124,0.30); background: #effdf5; color: #0a7a43; }
+
+    .play-panel {
+      min-height: 630px;
+      padding: clamp(16px, 2.2vw, 26px);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    .source-panel {
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,250,255,0.94));
+      border: 3px solid rgba(36,59,100,0.12);
+      padding: 16px;
+      min-height: 148px;
+      transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .source-panel.drop-ready,
+    .drop-zone.drop-ready {
+      border-color: rgba(8,184,200,0.65) !important;
+      box-shadow: 0 0 0 6px rgba(8,184,200,0.14), var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .source-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-weight: 1000;
+      color: var(--navy);
+    }
+
+    .source-count {
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: white;
+      font-size: 13px;
+    }
+
+    .piece-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-content: flex-start;
+      min-height: 78px;
+    }
+
+    .piece {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: white;
+      border: 2px solid rgba(36,59,100,0.10);
+      box-shadow: 0 8px 0 rgba(36,59,100,0.10), 0 12px 18px rgba(36,59,100,0.08);
+      font-size: 27px;
+      line-height: 1;
+      user-select: none;
+      touch-action: none;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      position: relative;
+    }
+
+    .piece:hover {
+      transform: translateY(-3px) rotate(-2deg);
+    }
+
+    .piece.selected {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 5px rgba(8,184,200,0.20), 0 8px 0 rgba(8,136,154,0.25);
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    .piece.is-being-dragged {
+      opacity: 0.36;
+      transform: scale(0.92);
+    }
+
+    .drag-ghost {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1.15) rotate(-5deg);
+      box-shadow: 0 18px 32px rgba(0,0,0,0.20) !important;
+    }
+
+    .item-stone { color: #101828; background: radial-gradient(circle at 30% 24%, #5f6b7b, #050505 62%); text-indent: -999px; }
+    .item-stone::after { content: ""; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 30% 24%, #5f6b7b, #050505 62%); box-shadow: inset -4px -4px 8px rgba(255,255,255,0.08); }
+    .item-marble { background: radial-gradient(circle at 30% 25%, #effaff, #68cbff 42%, #2f6fea 72%); text-indent: -999px; }
+    .item-marble::after { content: ""; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #effaff, #68cbff 42%, #2f6fea 72%); }
+    .item-paper { color: #7a4df5; background: linear-gradient(135deg, #fff, #f5ecff); }
+    .item-pencil { background: #fffaf0; transform-origin: center; }
+    .item-balloon { background: linear-gradient(180deg, #fff, #fff2f7); }
+    .item-fish { background: linear-gradient(180deg, #eaffff, #eff8ff); }
+    .item-carnation { background: linear-gradient(180deg, #fff2f7, #fff); }
+    .item-candy { background: linear-gradient(135deg, #fff, #fff1fb); }
+    .item-strawberry { background: linear-gradient(180deg, #fff7f7, #fff); }
+    .item-cookie { background: linear-gradient(180deg, #fff9ed, #fff); }
+    .item-block { background: linear-gradient(180deg, #fff4ea, #fff); }
+    .item-arrow { background: linear-gradient(180deg, #effbff, #fff); }
+
+    .drop-zone-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .drop-zone {
+      min-height: 205px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.72);
+      border: 3px solid rgba(36,59,100,0.12);
+      padding: 13px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 10px;
+      position: relative;
+      transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+      overflow: hidden;
+    }
+
+    .zone-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      color: var(--navy);
+      position: relative;
+      z-index: 1;
+      font-size: 15px;
+    }
+
+    .count-badge {
+      flex: 0 0 auto;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(36,59,100,0.10);
+      color: #334155;
+      font-size: 13px;
+    }
+
+    .container-visual {
+      min-height: 132px;
+      border-radius: 22px;
+      position: relative;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bin-items {
+      position: relative;
+      z-index: 2;
+      min-height: 84px;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-content: center;
+      justify-content: center;
+    }
+
+    .drop-zone.plate .container-visual::before,
+    .drop-zone.tray .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 9px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, #ffffff 0 42%, #dff8ff 43% 64%, #b6e6fa 65% 100%);
+      border: 4px solid #a8d9ed;
+      box-shadow: inset 0 -8px 10px rgba(35,59,100,0.07);
+    }
+
+    .drop-zone.jar .container-visual::before,
+    .drop-zone.fishbowl .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 17%;
+      right: 17%;
+      top: 16px;
+      bottom: 8px;
+      border-radius: 42% 42% 48% 48% / 35% 35% 55% 55%;
+      background: linear-gradient(180deg, rgba(231,251,255,0.8), rgba(144,226,255,0.42));
+      border: 5px solid rgba(108,189,218,0.65);
+      box-shadow: inset 0 -18px 0 rgba(72,190,228,0.13);
+    }
+
+    .drop-zone.fishbowl .container-visual::after {
+      content: "〰 〰";
+      position: absolute;
+      bottom: 24px;
+      color: rgba(30,112,146,0.48);
+      font-weight: 1000;
+      letter-spacing: 8px;
+    }
+
+    .drop-zone.basket .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: 10px;
+      height: 82px;
+      border-radius: 18px 18px 34px 34px;
+      background: repeating-linear-gradient(45deg, #ffcf85 0 10px, #e9a451 10px 20px);
+      border: 4px solid #b86e27;
+      box-shadow: inset 0 -9px 0 rgba(101,53,18,0.12);
+    }
+
+    .drop-zone.basket .container-visual::after {
+      content: "";
+      position: absolute;
+      left: 22%;
+      right: 22%;
+      bottom: 78px;
+      height: 54px;
+      border: 5px solid #b86e27;
+      border-bottom: 0;
+      border-radius: 999px 999px 0 0;
+    }
+
+    .drop-zone.candybox .container-visual::before,
+    .drop-zone.blockbox .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: 13px;
+      height: 92px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff0fa, #fbc7e4);
+      border: 4px solid #e279b2;
+      box-shadow: inset 0 -12px 0 rgba(130,48,93,0.10);
+    }
+
+    .drop-zone.blockbox .container-visual::before {
+      background: linear-gradient(135deg, #fff5d9, #ffc783);
+      border-color: #d88335;
+    }
+
+    .drop-zone.pot .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 20%;
+      right: 20%;
+      bottom: 10px;
+      height: 85px;
+      border-radius: 12px 12px 30px 30px;
+      background: linear-gradient(180deg, #d6924d, #a65d25);
+      border: 4px solid #8c4a1b;
+      box-shadow: inset 0 -12px 0 rgba(0,0,0,0.12);
+    }
+
+    .drop-zone.pot .container-visual::after {
+      content: "";
+      position: absolute;
+      left: 17%;
+      right: 17%;
+      bottom: 90px;
+      height: 16px;
+      border-radius: 999px;
+      background: #8c4a1b;
+    }
+
+    .drop-zone.balloonrack .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      bottom: 12px;
+      height: 78px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f1f5f9, #dce9f7);
+      border: 4px dashed #9fb8d4;
+    }
+
+    .drop-zone.balloonrack .container-visual::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      bottom: 22px;
+      border-left: 3px dashed rgba(36,59,100,0.20);
+    }
+
+    .drop-zone.pencilcup .container-visual::before,
+    .drop-zone.quiver .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 26%;
+      right: 26%;
+      bottom: 10px;
+      height: 100px;
+      border-radius: 12px 12px 28px 28px;
+      background: linear-gradient(90deg, #b8e0ff, #6bb5ff);
+      border: 4px solid #367fbd;
+      box-shadow: inset 0 -12px 0 rgba(0,0,0,0.10);
+    }
+
+    .drop-zone.quiver .container-visual::before {
+      background: linear-gradient(90deg, #e8c189, #ad6d36);
+      border-color: #7d4a23;
+    }
+
+    .drop-zone.envelope .container-visual::before {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 22px;
+      height: 90px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff, #ecebff);
+      border: 4px solid #9d91ff;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .drop-zone.envelope .container-visual::after {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: 28px;
+      height: 76px;
+      background: linear-gradient(135deg, transparent 49%, rgba(89,76,190,0.22) 50% 52%, transparent 53%),
+                  linear-gradient(225deg, transparent 49%, rgba(89,76,190,0.22) 50% 52%, transparent 53%);
+      pointer-events: none;
+    }
+
+    .empty-hint {
+      width: 100%;
+      align-self: center;
+      text-align: center;
+      color: #94a3b8;
+      font-weight: 900;
+      padding: 20px 8px;
+      border: 2px dashed rgba(36,59,100,0.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 4vw, 40px);
+      background: rgba(10, 18, 32, 0.62);
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .success-panel,
+    .chooser-panel,
+    .score-panel {
+      width: min(760px, 100%);
+      max-height: min(88vh, 900px);
+      overflow: auto;
+      background: #fffdf3;
+      border-radius: 30px;
+      border: 5px solid #1f2937;
+      box-shadow: 0 28px 0 rgba(0,0,0,0.30), 0 36px 70px rgba(0,0,0,0.25);
+      padding: clamp(22px, 4vw, 36px);
+      position: relative;
+      animation: modalPop 0.28s ease both;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.86) translateY(16px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .success-panel {
+      background:
+        linear-gradient(180deg, #fcfff2, #f1ffe9);
+    }
+
+    .retro-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .retro-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 12px;
+      background: #1f2937;
+      color: #eaffb9;
+      font-weight: 1000;
+      padding: 8px 12px;
+      box-shadow: inset 0 -3px 0 rgba(255,255,255,0.12);
+      letter-spacing: 0.03em;
+    }
+
+    .success-title {
+      margin: 10px 0 8px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.06;
+      color: #14532d;
+      font-weight: 1000;
+      letter-spacing: -0.06em;
+      text-align: center;
+      text-shadow: 0 5px 0 rgba(185,255,143,0.9);
+    }
+
+    .success-text {
+      margin: 0 auto 18px;
+      max-width: 620px;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.55;
+      font-weight: 900;
+      color: #334155;
+    }
+
+    .point-card-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .point-card {
+      border-radius: 18px;
+      padding: 14px;
+      background: white;
+      border: 2px solid rgba(36,59,100,0.10);
+      text-align: center;
+      box-shadow: inset 0 -6px 0 rgba(36,59,100,0.04);
+    }
+
+    .point-card small {
+      display: block;
+      font-weight: 1000;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .point-card strong {
+      font-size: 28px;
+      color: var(--navy);
+      font-weight: 1000;
+    }
+
+    .confetti-line {
+      text-align: center;
+      font-size: 28px;
+      letter-spacing: 0.18em;
+      margin: 8px 0 0;
+      animation: sparkle 1.1s ease infinite alternate;
+    }
+
+    @keyframes sparkle {
+      from { transform: translateY(0); opacity: 0.78; }
+      to { transform: translateY(-6px); opacity: 1; }
+    }
+
+    .chooser-panel {
+      width: min(860px, 100%);
+      background: linear-gradient(180deg, #ffffff, #f3fbff);
+      border-color: var(--navy);
+    }
+
+    .modal-heading {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 1000;
+      letter-spacing: -0.05em;
+      color: var(--navy);
+      text-align: center;
+    }
+
+    .modal-subtext {
+      margin: 0 auto 18px;
+      max-width: 720px;
+      color: #475569;
+      line-height: 1.5;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .friend-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 20px;
+      background: #fffbea;
+      border: 2px solid rgba(255,225,119,0.7);
+      margin: 16px 0;
+    }
+
+    .friend-row label {
+      flex: 0 0 auto;
+      font-weight: 1000;
+      color: #8a4a00;
+    }
+
+    .friend-row input {
+      flex: 1 1 auto;
+      min-width: 0;
+      border: 0;
+      background: white;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 850;
+      color: var(--ink);
+    }
+
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .number-btn {
+      aspect-ratio: 1.05;
+      border-radius: 18px;
+      background: white;
+      border: 3px solid rgba(36,59,100,0.12);
+      color: var(--navy);
+      font-size: 27px;
+      font-weight: 1000;
+      box-shadow: 0 8px 0 rgba(36,59,100,0.11);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .number-btn::after {
+      content: attr(data-level);
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(8,184,200,0.12);
+      color: var(--teal-dark);
+      font-size: 10px;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .number-btn:hover {
+      transform: translateY(-4px) rotate(-1deg);
+      border-color: var(--teal);
+      box-shadow: 0 12px 0 rgba(8,136,154,0.18), 0 18px 28px rgba(8,184,200,0.15);
+    }
+
+    .number-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 3px 0 rgba(36,59,100,0.18);
+    }
+
+    .chooser-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .score-panel {
+      width: min(1000px, 100%);
+      background: linear-gradient(180deg, #ffffff, #fffdf2);
+      border-color: #111827;
+    }
+
+    .score-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .score-box {
+      border-radius: 18px;
+      padding: 14px;
+      background: #f8fbff;
+      border: 2px solid rgba(36,59,100,0.10);
+      text-align: center;
+    }
+
+    .score-box small {
+      display: block;
+      color: var(--muted);
+      font-weight: 1000;
+      margin-bottom: 5px;
+    }
+
+    .score-box strong {
+      color: var(--navy);
+      font-size: 26px;
+      font-weight: 1000;
+    }
+
+    .calc-card {
+      border-radius: 22px;
+      background: #f6fff9;
+      border: 2px solid rgba(55,189,124,0.22);
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .calc-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(36,59,100,0.14);
+      font-weight: 900;
+    }
+
+    .calc-row:last-child { border-bottom: 0; }
+
+    .calc-row .value {
+      font-size: 22px;
+      font-weight: 1000;
+      color: var(--navy);
+    }
+
+    .bonus-input {
+      width: 120px;
+      border: 2px solid rgba(36,59,100,0.12);
+      border-radius: 14px;
+      padding: 8px 10px;
+      text-align: right;
+      font-weight: 1000;
+      color: var(--navy);
+      background: white;
+    }
+
+    .final-score-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 20px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--navy), #10213f);
+      color: white;
+      margin: 14px 0;
+      font-weight: 1000;
+    }
+
+    .final-score-line strong {
+      font-size: clamp(36px, 6vw, 66px);
+      color: var(--yellow);
+      text-shadow: 0 4px 0 rgba(0,0,0,0.28);
+      letter-spacing: -0.05em;
+    }
+
+    .log-wrap {
+      margin-top: 16px;
+      overflow: auto;
+      border-radius: 18px;
+      border: 2px solid rgba(36,59,100,0.10);
+      background: white;
+      max-height: 280px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      font-size: 14px;
+    }
+
+    .score-table th,
+    .score-table td {
+      padding: 10px 9px;
+      border-bottom: 1px solid rgba(36,59,100,0.08);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .score-table th {
+      position: sticky;
+      top: 0;
+      background: #eef8ff;
+      color: var(--navy);
+      font-weight: 1000;
+      z-index: 1;
+    }
+
+    .score-table td {
+      color: #475569;
+      font-weight: 800;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 980px) {
+      .start-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .mission-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-panel {
+        position: static;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .hud {
+        justify-content: stretch;
+      }
+
+      .hud-card {
+        flex: 1 1 120px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .screen {
+        padding: 12px;
+      }
+
+      .start-card {
+        border-radius: 30px;
+        padding: 24px 18px;
+      }
+
+      .start-card::before { display: none; }
+
+      .team-input-wrap,
+      .friend-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .challenge-board::before {
+        right: 12px;
+        font-size: 22px;
+      }
+
+      .mini-items {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .progress-strip {
+        gap: 3px;
+      }
+
+      .progress-tile {
+        height: 9px;
+      }
+
+      .piece {
+        width: 43px;
+        height: 43px;
+        font-size: 24px;
+        border-radius: 14px;
+      }
+
+      .drop-zone-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .point-card-row,
+      .score-summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .score-summary-grid .score-box:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .modal {
+        padding: 10px;
+      }
+
+      .success-panel,
+      .chooser-panel,
+      .score-panel {
+        border-width: 4px;
+        border-radius: 24px;
+        box-shadow: 0 18px 0 rgba(0,0,0,0.28), 0 28px 55px rgba(0,0,0,0.2);
+      }
+    }
+
+    @media print {
+      body { background: white; }
+      .screen, .modal { display: none !important; }
+      #scoreModal.open { display: block !important; position: static; background: white; padding: 0; }
+      .score-panel { max-height: none; box-shadow: none; border: 2px solid #111827; width: 100%; }
+      .modal-actions { display: none; }
+      .log-wrap { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="startScreen" class="screen start-screen active" aria-label="시작 화면">
+      <div class="start-card">
+        <div class="start-copy">
+          <div class="school-chip"><span class="dot"></span> 부설초등학교 3학년</div>
+          <h1 class="start-title">너 이거<br /><span>할 수 있어?</span></h1>
+          <p class="start-subtitle">자료를 움직여 <strong>똑같이 나누는</strong> 20개의 모둠 미션!</p>
+          <div class="start-actions">
+            <div class="team-input-wrap">
+              <label for="teamNameInput">모둠 이름</label>
+              <input id="teamNameInput" type="text" maxlength="18" placeholder="예: 번개 모둠" />
+            </div>
+            <button id="startBtn" class="primary-btn" type="button">게임 시작하기</button>
+            <div class="start-note">
+              <span aria-hidden="true">🎮</span>
+              <span>드래그해서 옮기거나, 자료를 한 번 누른 뒤 담을 곳을 누르면 됩니다. 성공한 친구가 다음 숫자를 골라요.</span>
+            </div>
+          </div>
+        </div>
+        <div class="start-visual" aria-hidden="true">
+          <div class="challenge-board">
+            <div class="visual-formula">24 ÷ 6</div>
+            <div class="mini-items">
+              <span class="mini-item">⚫</span><span class="mini-item">🍓</span><span class="mini-item">🔵</span><span class="mini-item">🎈</span>
+              <span class="mini-item">🍬</span><span class="mini-item">🌺</span><span class="mini-item">🐟</span><span class="mini-item">✏️</span>
+            </div>
+          </div>
+          <div class="start-note">
+            <span aria-hidden="true">🏆</span>
+            <span>레벨이 올라갈수록 미션 점수가 커집니다. 마지막에 점수 계산 창에서 최종 점수를 확인하세요.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="countdownScreen" class="screen countdown-screen" aria-label="카운트다운 화면">
+      <div class="countdown-box">
+        <div id="countdownLabel" class="countdown-label">부설초등학교 미션 준비</div>
+        <div id="countdownNumber" class="countdown-number">3</div>
+        <p id="countdownSub" class="countdown-sub">미션을 시작합니다!</p>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" aria-label="게임 화면">
+      <header class="topbar">
+        <div class="brand-row">
+          <div class="game-title-badge"><span class="bolt">⚡</span> 너 이거 할 수 있어?</div>
+          <div id="teamNameDisplay" class="team-name">부설 모둠</div>
+        </div>
+        <div class="hud" aria-label="게임 정보">
+          <div class="hud-card"><small>미션</small><strong id="missionHud">1/20</strong></div>
+          <div class="hud-card"><small>레벨</small><strong id="levelHud">1</strong></div>
+          <div class="hud-card"><small>점수</small><strong id="scoreHud">0</strong></div>
+          <button id="endBtn" class="danger-btn" type="button">게임 종료</button>
+        </div>
+      </header>
+
+      <div id="progressStrip" class="progress-strip" aria-label="미션 진행 정도"></div>
+
+      <div class="mission-layout">
+        <aside class="problem-panel">
+          <div class="problem-kicker">
+            <span id="levelPill" class="level-pill">레벨 1 · 입문</span>
+            <span id="materialPill" class="material-pill">이번 자료</span>
+          </div>
+          <div class="expression-card">
+            <div class="expression-label">오늘의 도전</div>
+            <div id="expressionMain" class="expression-main">12 나누기 3</div>
+            <div id="expressionSub" class="expression-sub">12 ÷ 3</div>
+          </div>
+          <p id="missionSentence" class="mission-sentence"></p>
+          <div class="tip-card">
+            <span class="tip-icon" aria-hidden="true">💡</span>
+            <span>한 곳에만 몰아넣지 말고, 모든 곳의 개수를 살펴보세요. 자료를 다시 옮겨도 됩니다.</span>
+          </div>
+          <div class="control-row">
+            <button id="checkBtn" class="primary-btn" type="button">정답 확인</button>
+            <button id="resetMissionBtn" class="secondary-btn" type="button">다시 놓기</button>
+          </div>
+          <div id="feedback" class="feedback info"><span aria-hidden="true">👆</span><span>자료를 드래그해서 담을 곳에 놓아 보세요.</span></div>
+        </aside>
+
+        <section class="play-panel" aria-label="자료 나누기 활동판">
+          <div id="sourceDrop" class="source-panel" data-drop-target="source" aria-label="나눌 자료가 있는 곳">
+            <div class="source-header">
+              <span id="sourceTitle">나눌 자료</span>
+              <span id="sourceCount" class="source-count">0개 남음</span>
+            </div>
+            <div id="sourceItems" class="piece-grid"></div>
+          </div>
+          <div id="dropZones" class="drop-zone-wrap"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="successModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="success-panel">
+      <div class="retro-top">
+        <span class="retro-label">★ MISSION CLEAR ★</span>
+        <span id="successMissionLabel" class="level-pill">미션 성공</span>
+      </div>
+      <h2 id="successTitle" class="success-title">나눗셈이 성공하였습니다.</h2>
+      <p id="successText" class="success-text"></p>
+      <div class="point-card-row">
+        <div class="point-card"><small>레벨 점수</small><strong id="basePointText">+100</strong></div>
+        <div class="point-card"><small>보너스</small><strong id="bonusPointText">+20</strong></div>
+        <div class="point-card"><small>획득 점수</small><strong id="earnedPointText">+120</strong></div>
+      </div>
+      <div class="confetti-line" aria-hidden="true">✦ ★ ✹ ✦ ★ ✹</div>
+      <div class="modal-actions">
+        <button id="successNextBtn" class="primary-btn" type="button">다음 숫자 고르기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="chooserModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="chooserTitle">
+    <div class="chooser-panel">
+      <h2 id="chooserTitle" class="modal-heading">다음 학생을 위해 숫자를 선택하세요</h2>
+      <p id="chooserSubtext" class="modal-subtext">고른 숫자가 다음 미션의 나누어지는 수가 됩니다. 32 이하의 숫자 카드만 나옵니다.</p>
+      <div class="friend-row">
+        <label for="friendNameInput">성공한 친구</label>
+        <input id="friendNameInput" type="text" maxlength="12" placeholder="이름을 쓰거나 비워 두세요" />
+      </div>
+      <div id="numberGrid" class="number-grid" aria-label="다음 숫자 선택"></div>
+      <div class="chooser-actions">
+        <button id="randomNumberBtn" class="secondary-btn" type="button">무작위 숫자 카드</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="scoreModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="scoreTitle">
+    <div class="score-panel">
+      <h2 id="scoreTitle" class="modal-heading">점수 계산</h2>
+      <p id="scoreSubtext" class="modal-subtext"></p>
+      <div id="scoreContent"></div>
+      <div class="modal-actions">
+        <button id="scoreCloseBtn" class="secondary-btn" type="button">계속하기</button>
+        <button id="scorePrintBtn" class="ghost-btn" type="button">결과 인쇄</button>
+        <button id="scoreRestartBtn" class="danger-btn" type="button">처음부터 다시</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const MAX_MISSIONS = 20;
+      const DIVISOR_CANDIDATES = [2, 3, 4, 5, 6, 7, 8];
+
+      const materials = [
+        { key: "baduk", name: "바둑돌", icon: "●", itemClass: "item-stone", containerClass: "plate", containerName: "접시" },
+        { key: "marble", name: "구슬", icon: "🔵", itemClass: "item-marble", containerClass: "jar", containerName: "유리컵" },
+        { key: "strawberry", name: "딸기", icon: "🍓", itemClass: "item-strawberry", containerClass: "basket", containerName: "바구니" },
+        { key: "candy", name: "마이쮸", icon: "🍬", itemClass: "item-candy", containerClass: "candybox", containerName: "간식 상자" },
+        { key: "carnation", name: "카네이션", icon: "🌺", itemClass: "item-carnation", containerClass: "pot", containerName: "화분" },
+        { key: "fish", name: "물고기", icon: "🐟", itemClass: "item-fish", containerClass: "fishbowl", containerName: "어항" },
+        { key: "balloon", name: "풍선", icon: "🎈", itemClass: "item-balloon", containerClass: "balloonrack", containerName: "풍선 묶음" },
+        { key: "pencil", name: "연필", icon: "✏️", itemClass: "item-pencil", containerClass: "pencilcup", containerName: "연필꽂이" },
+        { key: "cookie", name: "쿠키", icon: "🍪", itemClass: "item-cookie", containerClass: "tray", containerName: "쟁반" },
+        { key: "block", name: "블록", icon: "🧱", itemClass: "item-block", containerClass: "blockbox", containerName: "블록 상자" },
+        { key: "paper", name: "색종이", icon: "🟪", itemClass: "item-paper", containerClass: "envelope", containerName: "봉투" },
+        { key: "arrow", name: "화살", icon: "➳", itemClass: "item-arrow", containerClass: "quiver", containerName: "화살통" }
+      ];
+
+      const allowedDividends = Array.from({ length: 29 }, (_, index) => index + 4)
+        .filter((num) => validDivisorsAll(num).length > 0);
+
+      const state = {
+        teamName: "부설 모둠",
+        missionNo: 1,
+        score: 0,
+        successCount: 0,
+        streak: 0,
+        maxStreak: 0,
+        lastMaterialKey: null,
+        current: null,
+        pieces: [],
+        selectedPiece: null,
+        logs: []
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      document.addEventListener("DOMContentLoaded", init);
+
+      function init() {
+        buildProgressStrip();
+        buildNumberGrid();
+        attachStaticEvents();
+        updateStartMiniItems();
+      }
+
+      function attachStaticEvents() {
+        $("startBtn").addEventListener("click", startGame);
+        $("endBtn").addEventListener("click", () => showScoreModal(false));
+        $("checkBtn").addEventListener("click", () => checkAnswer(true));
+        $("resetMissionBtn").addEventListener("click", resetCurrentMission);
+        $("successNextBtn").addEventListener("click", handleSuccessNext);
+        $("randomNumberBtn").addEventListener("click", () => chooseNextDividend(pick(allowedDividends)));
+        $("scoreCloseBtn").addEventListener("click", () => closeModal("scoreModal"));
+        $("scorePrintBtn").addEventListener("click", () => window.print());
+        $("scoreRestartBtn").addEventListener("click", restartGame);
+        $("sourceDrop").addEventListener("click", (event) => {
+          if (event.target.closest(".piece")) return;
+          if (state.selectedPiece !== null) movePiece(state.selectedPiece, "source");
+        });
+      }
+
+      function startGame() {
+        const typedName = $("teamNameInput").value.trim();
+        state.teamName = typedName || "부설 모둠";
+        state.missionNo = 1;
+        state.score = 0;
+        state.successCount = 0;
+        state.streak = 0;
+        state.maxStreak = 0;
+        state.lastMaterialKey = null;
+        state.current = null;
+        state.pieces = [];
+        state.selectedPiece = null;
+        state.logs = [];
+        $("teamNameDisplay").textContent = state.teamName;
+        launchMission(pickInitialDividend());
+      }
+
+      function restartGame() {
+        closeModal("scoreModal");
+        closeModal("successModal");
+        closeModal("chooserModal");
+        showScreen("startScreen");
+        $("teamNameInput").focus();
+      }
+
+      function launchMission(chosenDividend) {
+        showScreen("countdownScreen");
+        $("countdownLabel").textContent = `${state.teamName} · 미션 ${state.missionNo}/${MAX_MISSIONS}`;
+        $("countdownSub").textContent = "곧 문제가 나옵니다!";
+        runCountdown(() => {
+          createMission(chosenDividend);
+          showScreen("gameScreen");
+        });
+      }
+
+      function runCountdown(done) {
+        const values = ["3", "2", "1", "시작!"];
+        let index = 0;
+        const numberEl = $("countdownNumber");
+        numberEl.classList.remove("go");
+        numberEl.textContent = values[index];
+        restartAnimation(numberEl);
+        const timer = setInterval(() => {
+          index += 1;
+          if (index >= values.length) {
+            clearInterval(timer);
+            done();
+            return;
+          }
+          numberEl.textContent = values[index];
+          numberEl.classList.toggle("go", values[index] === "시작!");
+          restartAnimation(numberEl);
+        }, 720);
+      }
+
+      function restartAnimation(element) {
+        element.style.animation = "none";
+        void element.offsetHeight;
+        element.style.animation = "";
+      }
+
+      function showScreen(activeId) {
+        ["startScreen", "countdownScreen", "gameScreen"].forEach((id) => {
+          $(id).classList.toggle("active", id === activeId);
+        });
+      }
+
+      function createMission(chosenDividend) {
+        const level = getLevel();
+        const dividend = chosenDividend || pickInitialDividend();
+        const divisor = chooseDivisor(dividend, level);
+        const material = pickMaterial();
+        state.current = {
+          dividend,
+          divisor,
+          quotient: dividend / divisor,
+          material,
+          level,
+          wrongChecks: 0,
+          solved: false
+        };
+        state.pieces = Array.from({ length: dividend }, (_, id) => ({ id, place: "source" }));
+        state.selectedPiece = null;
+        renderMission();
+        updateHud();
+        updateFeedback("자료를 드래그해서 담을 곳에 놓아 보세요. 한 번 누른 뒤 담을 곳을 눌러도 됩니다.", "info", "👆");
+      }
+
+      function pickInitialDividend() {
+        const level = getLevel();
+        let pool = allowedDividends;
+        if (level === 1) pool = allowedDividends.filter((num) => num <= 18);
+        if (level === 2) pool = allowedDividends.filter((num) => num <= 24);
+        return pick(pool);
+      }
+
+      function chooseDivisor(dividend, level) {
+        const all = validDivisorsAll(dividend);
+        const preferred = all.filter((d) => {
+          if (level === 1) return d <= 4;
+          if (level === 2) return d <= 5;
+          if (level === 3) return d <= 6;
+          return true;
+        });
+        const pool = preferred.length ? preferred : all;
+        return pick(pool);
+      }
+
+      function validDivisorsAll(num) {
+        return DIVISOR_CANDIDATES.filter((d) => num % d === 0 && num / d >= 2 && num <= 32);
+      }
+
+      function pickMaterial() {
+        const pool = materials.filter((material) => material.key !== state.lastMaterialKey);
+        const material = pick(pool.length ? pool : materials);
+        state.lastMaterialKey = material.key;
+        return material;
+      }
+
+      function renderMission() {
+        const current = state.current;
+        const material = current.material;
+        $("levelPill").textContent = `레벨 ${current.level} · ${levelName(current.level)}`;
+        $("materialPill").textContent = `${material.icon} ${material.name}`;
+        $("expressionMain").textContent = `${current.dividend} 나누기 ${current.divisor}`;
+        $("expressionSub").textContent = `${current.dividend} ÷ ${current.divisor}`;
+        $("sourceTitle").textContent = `나눌 자료 · ${material.name}`;
+        $("missionSentence").innerHTML = `<strong>${current.dividend}개</strong>의 ${withJosa(material.name, "을/를")} <strong>${current.divisor}개의 ${material.containerName}</strong>에 똑같이 나누어 놓으세요.`;
+
+        const dropZones = $("dropZones");
+        dropZones.innerHTML = "";
+        for (let i = 0; i < current.divisor; i += 1) {
+          const zone = document.createElement("div");
+          zone.className = `drop-zone ${material.containerClass}`;
+          zone.dataset.dropTarget = String(i);
+          zone.setAttribute("aria-label", `${i + 1}번째 ${material.containerName}`);
+          zone.innerHTML = `
+            <div class="zone-label">
+              <span>${i + 1}번째 ${material.containerName}</span>
+              <span class="count-badge">0개</span>
+            </div>
+            <div class="container-visual">
+              <div class="bin-items"></div>
+            </div>
+          `;
+          zone.addEventListener("click", (event) => {
+            if (event.target.closest(".piece")) return;
+            if (state.selectedPiece !== null) movePiece(state.selectedPiece, i);
+          });
+          dropZones.appendChild(zone);
+        }
+        renderPieces();
+      }
+
+      function renderPieces() {
+        const sourceItems = $("sourceItems");
+        sourceItems.innerHTML = "";
+        document.querySelectorAll(".bin-items").forEach((bin) => { bin.innerHTML = ""; });
+
+        const current = state.current;
+        if (!current) return;
+
+        state.pieces.forEach((piece) => {
+          const pieceEl = createPieceElement(piece);
+          if (piece.place === "source") {
+            sourceItems.appendChild(pieceEl);
+          } else {
+            const bin = document.querySelector(`[data-drop-target="${piece.place}"] .bin-items`);
+            if (bin) bin.appendChild(pieceEl);
+          }
+        });
+
+        addEmptyHints();
+        updateCounts();
+      }
+
+      function createPieceElement(piece) {
+        const current = state.current;
+        const material = current.material;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `piece ${material.itemClass}${state.selectedPiece === piece.id ? " selected" : ""}`;
+        button.dataset.id = String(piece.id);
+        button.textContent = material.icon;
+        button.setAttribute("aria-label", `${material.name} ${piece.id + 1}`);
+        attachPiecePointer(button);
+        return button;
+      }
+
+      function attachPiecePointer(element) {
+        element.addEventListener("pointerdown", (event) => {
+          if (!state.current || state.current.solved) return;
+          if (typeof event.button === "number" && event.button !== 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+
+          const id = Number(element.dataset.id);
+          const startX = event.clientX;
+          const startY = event.clientY;
+          let dragging = false;
+          let ghost = null;
+
+          const onMove = (moveEvent) => {
+            const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
+            if (!dragging && distance > 8) {
+              dragging = true;
+              ghost = element.cloneNode(true);
+              ghost.classList.add("drag-ghost");
+              ghost.classList.remove("selected");
+              ghost.style.width = `${element.offsetWidth}px`;
+              ghost.style.height = `${element.offsetHeight}px`;
+              ghost.style.left = `${moveEvent.clientX}px`;
+              ghost.style.top = `${moveEvent.clientY}px`;
+              document.body.appendChild(ghost);
+              element.classList.add("is-being-dragged");
+              highlightDropTargets(true);
+            }
+            if (dragging && ghost) {
+              ghost.style.left = `${moveEvent.clientX}px`;
+              ghost.style.top = `${moveEvent.clientY}px`;
+            }
+          };
+
+          const onUp = (upEvent) => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onCancel);
+
+            if (dragging) {
+              const targetEl = document.elementFromPoint(upEvent.clientX, upEvent.clientY)?.closest("[data-drop-target]");
+              if (targetEl) {
+                const target = targetEl.dataset.dropTarget === "source" ? "source" : Number(targetEl.dataset.dropTarget);
+                movePiece(id, target);
+              }
+              cleanupDrag();
+              return;
+            }
+            toggleSelectedPiece(id);
+          };
+
+          const onCancel = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onCancel);
+            cleanupDrag();
+          };
+
+          const cleanupDrag = () => {
+            if (ghost) ghost.remove();
+            element.classList.remove("is-being-dragged");
+            highlightDropTargets(false);
+          };
+
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+          window.addEventListener("pointercancel", onCancel);
+        });
+      }
+
+      function toggleSelectedPiece(id) {
+        if (state.current?.solved) return;
+        state.selectedPiece = state.selectedPiece === id ? null : id;
+        renderPieces();
+        highlightDropTargets(state.selectedPiece !== null);
+        if (state.selectedPiece !== null) {
+          updateFeedback("자료를 잡았어요. 넣을 곳을 탭하거나 그대로 드래그해 보세요.", "info", "✋");
+        } else {
+          updateFeedback("자료를 다시 놓았습니다. 다른 자료를 골라 보세요.", "info", "👆");
+        }
+      }
+
+      function movePiece(id, target) {
+        if (!state.current || state.current.solved) return;
+        const piece = state.pieces.find((item) => item.id === id);
+        if (!piece) return;
+        piece.place = target;
+        state.selectedPiece = null;
+        renderPieces();
+        highlightDropTargets(false);
+        checkAnswer(false);
+      }
+
+      function highlightDropTargets(on) {
+        document.querySelectorAll("[data-drop-target]").forEach((target) => {
+          target.classList.toggle("drop-ready", on);
+        });
+      }
+
+      function addEmptyHints() {
+        const sourceItems = $("sourceItems");
+        if (sourceItems.children.length === 0) {
+          sourceItems.innerHTML = `<div class="empty-hint">모든 자료를 옮겼어요.</div>`;
+        }
+        document.querySelectorAll(".bin-items").forEach((bin) => {
+          if (bin.children.length === 0) {
+            bin.innerHTML = `<div class="empty-hint">여기에 놓기</div>`;
+          }
+        });
+      }
+
+      function updateCounts() {
+        const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
+        $("sourceCount").textContent = `${sourceLeft}개 남음`;
+        const counts = getBinCounts();
+        document.querySelectorAll(".drop-zone").forEach((zone, index) => {
+          const badge = zone.querySelector(".count-badge");
+          if (badge) badge.textContent = `${counts[index] || 0}개`;
+        });
+      }
+
+      function getBinCounts() {
+        if (!state.current) return [];
+        return Array.from({ length: state.current.divisor }, (_, index) =>
+          state.pieces.filter((piece) => piece.place === index).length
+        );
+      }
+
+      function checkAnswer(manual) {
+        const current = state.current;
+        if (!current || current.solved) return false;
+
+        const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
+        const counts = getBinCounts();
+        const allSame = counts.length > 0 && counts.every((count) => count === counts[0]);
+        const allPlaced = sourceLeft === 0;
+        const correct = allPlaced && allSame && counts[0] === current.quotient;
+
+        if (correct) {
+          completeMission();
+          return true;
+        }
+
+        if (manual) current.wrongChecks += 1;
+
+        if (!allPlaced) {
+          if (manual) updateFeedback(`아직 ${sourceLeft}개의 ${current.material.name}가 남아 있어요. 모두 옮겨 보세요.`, "warn", "🧺");
+          return false;
+        }
+
+        if (!allSame) {
+          updateFeedback("아직 똑같이 나누어지지 않았어요. 각 담을 곳의 개수를 비교해 보세요.", "warn", "🔎");
+          return false;
+        }
+
+        updateFeedback("거의 다 왔어요. 개수를 다시 한 번 살펴보세요.", "warn", "💭");
+        return false;
+      }
+
+      function completeMission() {
+        const current = state.current;
+        if (!current || current.solved) return;
+        current.solved = true;
+
+        const base = levelPoint(current.level);
+        const noWrongBonus = current.wrongChecks === 0 ? 20 : 0;
+        const streakBonus = Math.min(state.streak * 10, 50);
+        const earned = base + noWrongBonus + streakBonus;
+
+        state.score += earned;
+        state.successCount += 1;
+        state.streak += 1;
+        state.maxStreak = Math.max(state.maxStreak, state.streak);
+
+        state.logs.push({
+          mission: state.missionNo,
+          level: current.level,
+          dividend: current.dividend,
+          divisor: current.divisor,
+          quotient: current.quotient,
+          material: current.material.name,
+          container: current.material.containerName,
+          wrongChecks: current.wrongChecks,
+          base,
+          noWrongBonus,
+          streakBonus,
+          earned,
+          friend: "",
+          nextDividend: ""
+        });
+
+        updateHud();
+        updateFeedback("성공! 모든 곳에 똑같이 나누어졌어요.", "good", "🎉");
+        showSuccessModal({ base, noWrongBonus, streakBonus, earned });
+      }
+
+      function showSuccessModal(points) {
+        const current = state.current;
+        $("successMissionLabel").textContent = `미션 ${state.missionNo}/${MAX_MISSIONS}`;
+        $("successText").innerHTML = `<strong>${current.dividend} 나누기 ${current.divisor} = ${current.quotient}</strong><br />각 ${current.material.containerName}에 ${current.quotient}개씩 들어갔어요.`;
+        $("basePointText").textContent = `+${points.base}`;
+        $("bonusPointText").textContent = `+${points.noWrongBonus + points.streakBonus}`;
+        $("earnedPointText").textContent = `+${points.earned}`;
+        $("successNextBtn").textContent = state.missionNo >= MAX_MISSIONS ? "점수 계산하기" : "다음 숫자 고르기";
+        openModal("successModal");
+      }
+
+      function handleSuccessNext() {
+        closeModal("successModal");
+        if (state.missionNo >= MAX_MISSIONS) {
+          showScoreModal(true);
+          return;
+        }
+        showChooserModal();
+      }
+
+      function showChooserModal() {
+        $("friendNameInput").value = "";
+        $("chooserSubtext").textContent = `다음은 미션 ${state.missionNo + 1}/${MAX_MISSIONS}입니다. 성공한 친구가 숫자를 하나 골라 주세요.`;
+        buildNumberGrid();
+        openModal("chooserModal");
+        setTimeout(() => $("friendNameInput").focus(), 80);
+      }
+
+      function buildNumberGrid() {
+        const grid = $("numberGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        allowedDividends.forEach((num) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "number-btn";
+          button.textContent = String(num);
+          button.dataset.level = numberDifficultyLabel(num);
+          button.title = `${num}을 나누어지는 수로 선택`;
+          button.addEventListener("click", () => chooseNextDividend(num));
+          grid.appendChild(button);
+        });
+      }
+
+      function chooseNextDividend(num) {
+        const lastLog = state.logs[state.logs.length - 1];
+        if (lastLog) {
+          lastLog.friend = $("friendNameInput").value.trim() || "-";
+          lastLog.nextDividend = num;
+        }
+        closeModal("chooserModal");
+        state.missionNo += 1;
+        launchMission(num);
+      }
+
+      function resetCurrentMission() {
+        if (!state.current || state.current.solved) return;
+        state.pieces = state.pieces.map((piece) => ({ ...piece, place: "source" }));
+        state.selectedPiece = null;
+        state.current.wrongChecks += 1;
+        renderPieces();
+        highlightDropTargets(false);
+        updateFeedback("처음 자리로 돌아왔어요. 다시 똑같이 나누어 보세요.", "info", "↩️");
+      }
+
+      function updateHud() {
+        $("missionHud").textContent = `${state.missionNo}/${MAX_MISSIONS}`;
+        $("levelHud").textContent = String(getLevel());
+        $("scoreHud").textContent = state.score.toLocaleString("ko-KR");
+        buildProgressStrip();
+      }
+
+      function buildProgressStrip() {
+        const strip = $("progressStrip");
+        if (!strip) return;
+        strip.innerHTML = "";
+        for (let i = 1; i <= MAX_MISSIONS; i += 1) {
+          const tile = document.createElement("div");
+          tile.className = "progress-tile";
+          if (i <= state.successCount) tile.classList.add("done");
+          if (i === state.missionNo && state.successCount < MAX_MISSIONS) tile.classList.add("current");
+          tile.title = `미션 ${i}`;
+          strip.appendChild(tile);
+        }
+      }
+
+      function updateFeedback(text, tone, icon) {
+        const feedback = $("feedback");
+        feedback.className = `feedback ${tone || "info"}`;
+        feedback.innerHTML = `<span aria-hidden="true">${icon || "💬"}</span><span>${text}</span>`;
+      }
+
+      function showScoreModal(finished) {
+        const completed = state.successCount;
+        const missionScore = state.score;
+        const completeBonus = completed >= MAX_MISSIONS ? 300 : 0;
+        const remaining = Math.max(0, MAX_MISSIONS - completed);
+        const sub = finished || completed >= MAX_MISSIONS
+          ? `${state.teamName}, 20개의 미션을 모두 마쳤습니다!`
+          : `${state.teamName}, 지금까지의 점수를 계산합니다. 남은 미션은 ${remaining}개입니다.`;
+        $("scoreSubtext").textContent = sub;
+
+        const rows = state.logs.map((log) => `
+          <tr>
+            <td>${log.mission}</td>
+            <td>Lv.${log.level}</td>
+            <td>${log.dividend} ÷ ${log.divisor} = ${log.quotient}</td>
+            <td>${escapeHtml(log.material)}</td>
+            <td>${escapeHtml(log.friend || "-")}</td>
+            <td>${log.nextDividend || "-"}</td>
+            <td>${log.wrongChecks}</td>
+            <td>${log.earned.toLocaleString("ko-KR")}</td>
+          </tr>
+        `).join("");
+
+        $("scoreContent").innerHTML = `
+          <div class="score-summary-grid">
+            <div class="score-box"><small>성공 미션</small><strong>${completed}/${MAX_MISSIONS}</strong></div>
+            <div class="score-box"><small>최고 연속 성공</small><strong>${state.maxStreak}</strong></div>
+            <div class="score-box"><small>미션 점수</small><strong>${missionScore.toLocaleString("ko-KR")}</strong></div>
+            <div class="score-box"><small>완주 보너스</small><strong>${completeBonus.toLocaleString("ko-KR")}</strong></div>
+          </div>
+          <div class="calc-card">
+            <div class="calc-row"><span>미션 점수 합계</span><span class="value">${missionScore.toLocaleString("ko-KR")}점</span></div>
+            <div class="calc-row"><span>20개 완주 보너스</span><span class="value">${completeBonus.toLocaleString("ko-KR")}점</span></div>
+            <div class="calc-row"><span>협동 점수 직접 입력</span><span><input id="coopBonusInput" class="bonus-input" type="number" min="0" max="9999" step="10" value="0" aria-label="협동 점수" /> 점</span></div>
+          </div>
+          <div class="final-score-line">최종 점수 <strong id="finalScoreText">${(missionScore + completeBonus).toLocaleString("ko-KR")}</strong> 점</div>
+          <div class="log-wrap">
+            <table class="score-table">
+              <thead>
+                <tr><th>미션</th><th>레벨</th><th>문제</th><th>자료</th><th>성공 친구</th><th>고른 다음 숫자</th><th>다시 확인</th><th>획득 점수</th></tr>
+              </thead>
+              <tbody>${rows || `<tr><td colspan="8">아직 성공한 미션이 없습니다.</td></tr>`}</tbody>
+            </table>
+          </div>
+        `;
+
+        const input = $("coopBonusInput");
+        input.addEventListener("input", () => {
+          const bonus = Math.max(0, Number(input.value) || 0);
+          $("finalScoreText").textContent = (missionScore + completeBonus + bonus).toLocaleString("ko-KR");
+        });
+
+        const canContinue = state.current && !state.current.solved && completed < MAX_MISSIONS;
+        $("scoreCloseBtn").textContent = canContinue ? "계속하기" : "닫기";
+        openModal("scoreModal");
+      }
+
+      function openModal(id) {
+        $(id).classList.add("open");
+      }
+
+      function closeModal(id) {
+        $(id).classList.remove("open");
+      }
+
+      function getLevel() {
+        return Math.min(4, Math.ceil(state.missionNo / 5));
+      }
+
+      function levelName(level) {
+        return ["", "입문", "도전", "고수", "챔피언"][level] || "도전";
+      }
+
+      function levelPoint(level) {
+        return 100 + (level - 1) * 50;
+      }
+
+      function numberDifficultyLabel(num) {
+        if (num <= 12) return "가볍게";
+        if (num <= 20) return "도전";
+        if (num <= 28) return "고수";
+        return "최고";
+      }
+
+      function withJosa(word, pair) {
+        const [withFinal, withoutFinal] = pair.split("/");
+        return `${word}${hasFinalConsonant(word) ? withFinal : withoutFinal}`;
+      }
+
+      function hasFinalConsonant(text) {
+        const last = text.trim().charCodeAt(text.trim().length - 1);
+        if (Number.isNaN(last)) return false;
+        if (last < 0xac00 || last > 0xd7a3) return false;
+        return (last - 0xac00) % 28 !== 0;
+      }
+
+      function pick(array) {
+        return array[Math.floor(Math.random() * array.length)];
+      }
+
+      function updateStartMiniItems() {
+        const icons = ["⚫", "🔵", "🍓", "🍬", "🌺", "🐟", "🎈", "✏️"];
+        document.querySelectorAll(".mini-item").forEach((item, index) => {
+          item.textContent = icons[index % icons.length];
+        });
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+    })();
+  </script>
+</body>
+</html>
