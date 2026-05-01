@@ -22,9 +22,10 @@
       --card: rgba(255, 255, 255, 0.92);
       --shadow: 0 14px 34px rgba(37, 62, 104, 0.14);
       --radius: 24px;
-      --piece-size: 40px;
-      --bin-piece-size: 36px;
-      --piece-gap: 7px;
+      --piece-size: 88px;
+      --bin-piece-size: 84px;
+      --piece-gap: 8px;
+      --bin-piece-gap: 8px;
       --tap: 48px;
     }
 
@@ -32,8 +33,10 @@
 
     html, body {
       width: 100%;
+      height: 100%;
       min-height: 100%;
       margin: 0;
+      overscroll-behavior: none;
     }
 
     body {
@@ -43,7 +46,8 @@
         radial-gradient(circle at 5% 0%, rgba(255, 229, 131, 0.95) 0 155px, transparent 156px),
         radial-gradient(circle at 94% 4%, rgba(17, 189, 200, 0.25) 0 190px, transparent 191px),
         linear-gradient(135deg, var(--bg1) 0%, #f8fffb 46%, var(--bg2) 100%);
-      overflow-x: hidden;
+      overflow: hidden;
+      overscroll-behavior: none;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
@@ -455,6 +459,15 @@
       letter-spacing: -0.04em;
     }
 
+    .timer-card {
+      min-width: 94px;
+    }
+
+    .timer-card strong {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+
     .progress-strip {
       flex: 0 0 auto;
       display: grid;
@@ -656,18 +669,18 @@
 
     .play-panel {
       display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      gap: 11px;
-      padding: 12px;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 9px;
+      padding: 11px;
       overflow: hidden;
     }
 
     .source-panel {
-      min-height: 94px;
+      min-height: 118px;
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,255,0.96));
       border: 3px solid rgba(37, 62, 104, 0.12);
-      padding: 11px 12px 10px;
+      padding: 12px 14px 12px;
       transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
       overflow: hidden;
     }
@@ -684,10 +697,10 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 7px;
+      margin-bottom: 9px;
       color: var(--navy);
       font-weight: 1000;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .source-count {
@@ -701,14 +714,14 @@
     }
 
     .piece-grid {
-      min-height: calc(var(--piece-size) + 5px);
+      min-height: calc(var(--piece-size) + 8px);
       display: flex;
       flex-wrap: wrap;
       gap: var(--piece-gap);
       align-content: flex-start;
       align-items: flex-start;
       overflow: hidden;
-      padding: 1px;
+      padding: 2px;
     }
 
     .source-empty {
@@ -723,19 +736,145 @@
       font-weight: 900;
     }
 
-    .source-panel.is-empty .source-empty { display: block; }
+    .source-panel.is-empty {
+      min-height: 78px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .source-panel.is-empty .source-header { margin-bottom: 6px; }
+    .source-panel.is-empty .piece-grid { display: none; min-height: 0; }
+    .source-panel.is-empty .source-empty { display: block; padding: 9px 12px; }
+
+    .answer-panel {
+      min-height: 86px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(238, 251, 255, 0.96));
+      border: 3px solid rgba(37, 62, 104, 0.13);
+      box-shadow: inset 0 -7px 0 rgba(37, 62, 104, 0.04);
+      overflow: hidden;
+    }
+
+    .answer-panel.ready {
+      border-color: rgba(255, 139, 76, 0.56);
+      background: linear-gradient(135deg, #fffdf3, #efffff);
+      box-shadow: 0 0 0 5px rgba(255, 139, 76, 0.10), inset 0 -7px 0 rgba(37, 62, 104, 0.04);
+    }
+
+    .answer-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 82px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 1000;
+      white-space: nowrap;
+      box-shadow: 0 6px 0 rgba(37, 62, 104, 0.16);
+    }
+
+    .answer-formula {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--navy);
+      font-size: clamp(34px, 4.1vw, 58px);
+      line-height: 1;
+      font-weight: 1000;
+      letter-spacing: -0.055em;
+      white-space: nowrap;
+    }
+
+    .answer-input {
+      width: clamp(88px, 9.2vw, 136px);
+      height: clamp(56px, 6vw, 68px);
+      border-radius: 18px;
+      border: 4px solid rgba(17, 189, 200, 0.38);
+      background: #ffffff;
+      color: var(--teal-dark);
+      text-align: center;
+      font-size: clamp(30px, 3.8vw, 52px);
+      line-height: 1;
+      font-weight: 1000;
+      box-shadow: inset 0 -5px 0 rgba(37, 62, 104, 0.06);
+    }
+
+    .answer-input::-webkit-outer-spin-button,
+    .answer-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .answer-input[type=number] { -moz-appearance: textfield; }
+
+    .answer-input:disabled {
+      border-color: rgba(37, 62, 104, 0.18);
+      border-style: dashed;
+      background: #eef3f8;
+      color: #94a3b8;
+      box-shadow: none;
+    }
+
+    .answer-panel.ready .answer-input.needs-answer:not(:disabled) {
+      animation: answerBlink 0.72s ease-in-out infinite alternate;
+    }
+
+    @keyframes answerBlink {
+      from {
+        border-color: rgba(255, 139, 76, 0.45);
+        box-shadow: 0 0 0 0 rgba(255, 139, 76, 0.08), inset 0 -5px 0 rgba(37, 62, 104, 0.06);
+        transform: translateY(0);
+      }
+      to {
+        border-color: rgba(255, 139, 76, 1);
+        box-shadow: 0 0 0 7px rgba(255, 139, 76, 0.18), inset 0 -5px 0 rgba(37, 62, 104, 0.06);
+        transform: translateY(-1px);
+      }
+    }
+
+    .answer-submit {
+      min-width: 108px;
+      min-height: 58px;
+      padding: 10px 18px;
+      font-size: 20px;
+      box-shadow: 0 7px 0 rgba(8, 131, 145, 0.25);
+    }
+
+    .answer-submit:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.45);
+      opacity: 0.62;
+      box-shadow: none;
+    }
+
+    .answer-help {
+      max-width: 185px;
+      color: #526276;
+      font-size: 14px;
+      line-height: 1.32;
+      font-weight: 900;
+      text-align: right;
+      word-break: keep-all;
+    }
 
     .piece {
       width: var(--piece-size);
       height: var(--piece-size);
       flex: 0 0 auto;
-      border-radius: calc(var(--piece-size) * 0.32);
+      padding: 0;
+      border-radius: calc(var(--piece-size) * 0.22);
       display: grid;
       place-items: center;
       background: #fff;
       border: 2px solid rgba(37, 62, 104, 0.11);
-      box-shadow: 0 5px 0 rgba(37, 62, 104, 0.10), 0 8px 14px rgba(37, 62, 104, 0.08);
-      font-size: calc(var(--piece-size) * 0.58);
+      box-shadow: 0 6px 0 rgba(37, 62, 104, 0.10), 0 9px 16px rgba(37, 62, 104, 0.08);
+      font-size: calc(var(--piece-size) * 0.88);
       line-height: 1;
       touch-action: none;
       user-select: none;
@@ -747,9 +886,9 @@
     .bin-items .piece {
       width: var(--bin-piece-size);
       height: var(--bin-piece-size);
-      border-radius: calc(var(--bin-piece-size) * 0.32);
-      font-size: calc(var(--bin-piece-size) * 0.58);
-      box-shadow: 0 4px 0 rgba(37, 62, 104, 0.10), 0 7px 12px rgba(37, 62, 104, 0.08);
+      border-radius: calc(var(--bin-piece-size) * 0.22);
+      font-size: calc(var(--bin-piece-size) * 0.88);
+      box-shadow: 0 5px 0 rgba(37, 62, 104, 0.10), 0 8px 14px rgba(37, 62, 104, 0.08);
     }
 
     .piece:hover { transform: translateY(-2px) rotate(-2deg); }
@@ -771,13 +910,19 @@
     }
 
     .piece-art {
-      width: 76%;
-      height: 76%;
+      width: 100%;
+      height: 100%;
       display: grid;
       place-items: center;
       position: relative;
       font-size: inherit;
       line-height: 1;
+    }
+
+    .item-baduk .piece-art,
+    .item-marble .piece-art {
+      width: 92%;
+      height: 92%;
     }
 
     .item-baduk .piece-art {
@@ -820,6 +965,18 @@
     .item-paper .piece-art::before { content: "■"; color: #8056e9; font-size: 0.96em; }
     .item-arrow .piece-art::before { content: "➳"; color: #2079b7; font-size: 1.05em; }
 
+    .item-strawberry .piece-art::before,
+    .item-candy .piece-art::before,
+    .item-carnation .piece-art::before,
+    .item-fish .piece-art::before,
+    .item-balloon .piece-art::before,
+    .item-pencil .piece-art::before,
+    .item-cookie .piece-art::before,
+    .item-block .piece-art::before {
+      filter: drop-shadow(0 3px 1px rgba(37,62,104,0.12));
+      transform: translateY(-1px);
+    }
+
     .item-paper { background: linear-gradient(135deg, #fff, #f3edff); }
     .item-candy { background: linear-gradient(135deg, #fff, #fff1fb); }
     .item-carnation { background: linear-gradient(180deg, #fff2f7, #fff); }
@@ -836,7 +993,7 @@
       display: grid;
       gap: 10px;
       align-content: stretch;
-      overflow: auto;
+      overflow: hidden;
       padding: 1px 2px 3px;
       scrollbar-width: thin;
     }
@@ -926,7 +1083,7 @@
       height: 100%;
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: var(--bin-piece-gap);
       align-content: center;
       justify-content: center;
       align-items: center;
@@ -951,10 +1108,10 @@
 
     .drop-zone.plate .container-shape,
     .drop-zone.tray .container-shape {
-      left: 7%;
-      right: 7%;
-      bottom: 8%;
-      height: 60%;
+      left: 4%;
+      right: 4%;
+      bottom: 5%;
+      height: 72%;
       border-radius: 50%;
       background: radial-gradient(ellipse at center, #fff 0 45%, #eefcff 46% 63%, #bceafa 64% 100%);
       border: 4px solid #a7daed;
@@ -963,20 +1120,20 @@
 
     .drop-zone.plate .drop-pad,
     .drop-zone.tray .drop-pad {
-      left: 12%;
-      right: 12%;
-      bottom: 13%;
-      height: 46%;
+      left: 8%;
+      right: 8%;
+      bottom: 11%;
+      height: 60%;
       border-radius: 50%;
       background: rgba(255,255,255,0.36);
     }
 
     .drop-zone.jar .container-shape,
     .drop-zone.fishbowl .container-shape {
-      left: 15%;
-      right: 15%;
-      top: 9%;
-      bottom: 5%;
+      left: 8%;
+      right: 8%;
+      top: 3%;
+      bottom: 4%;
       border-radius: 42% 42% 48% 48% / 34% 34% 55% 55%;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.45) 0 16%, rgba(163,232,255,0.44) 17% 100%);
@@ -1009,10 +1166,10 @@
 
     .drop-zone.jar .drop-pad,
     .drop-zone.fishbowl .drop-pad {
-      left: 21%;
-      right: 21%;
-      top: 22%;
-      bottom: 15%;
+      left: 13%;
+      right: 13%;
+      top: 16%;
+      bottom: 12%;
       border-radius: 24% 24% 40% 40% / 24% 24% 45% 45%;
       background: rgba(231, 251, 255, 0.20);
     }
@@ -1020,10 +1177,10 @@
     .drop-zone.basket .container-shape,
     .drop-zone.candybox .container-shape,
     .drop-zone.blockbox .container-shape {
-      left: 11%;
-      right: 11%;
-      bottom: 8%;
-      height: 61%;
+      left: 7%;
+      right: 7%;
+      bottom: 6%;
+      height: 72%;
       border-radius: 18px 18px 31px 31px;
       background: repeating-linear-gradient(45deg, #ffce85 0 9px, #eaa456 9px 18px);
       border: 4px solid #b96f28;
@@ -1055,10 +1212,10 @@
     .drop-zone.basket .drop-pad,
     .drop-zone.candybox .drop-pad,
     .drop-zone.blockbox .drop-pad {
-      left: 15%;
-      right: 15%;
-      bottom: 16%;
-      height: 46%;
+      left: 9%;
+      right: 9%;
+      bottom: 12%;
+      height: 60%;
       border-radius: 16px 16px 24px 24px;
     }
 
@@ -1085,10 +1242,10 @@
     }
 
     .drop-zone.pot .drop-pad {
-      left: 12%;
-      right: 12%;
-      top: 4%;
-      bottom: 42%;
+      left: 6%;
+      right: 6%;
+      top: 0%;
+      bottom: 34%;
       border-radius: 24px;
       background: rgba(255,255,255,0.18);
     }
@@ -1113,10 +1270,10 @@
     }
 
     .drop-zone.balloonrack .drop-pad {
-      left: 10%;
-      right: 10%;
-      top: 8%;
-      bottom: 16%;
+      left: 6%;
+      right: 6%;
+      top: 4%;
+      bottom: 12%;
       border-radius: 18px;
     }
 
@@ -1139,19 +1296,19 @@
 
     .drop-zone.pencilcup .drop-pad,
     .drop-zone.quiver .drop-pad {
-      left: 17%;
-      right: 17%;
-      top: 4%;
-      bottom: 29%;
+      left: 8%;
+      right: 8%;
+      top: 0%;
+      bottom: 24%;
       border-radius: 20px;
       background: rgba(255,255,255,0.18);
     }
 
     .drop-zone.envelope .container-shape {
-      left: 9%;
-      right: 9%;
-      bottom: 14%;
-      height: 62%;
+      left: 6%;
+      right: 6%;
+      bottom: 10%;
+      height: 72%;
       border-radius: 14px;
       background:
         linear-gradient(135deg, transparent 49%, rgba(89, 76, 190, 0.18) 50% 52%, transparent 53%),
@@ -1161,10 +1318,10 @@
     }
 
     .drop-zone.envelope .drop-pad {
-      left: 13%;
-      right: 13%;
-      bottom: 20%;
-      height: 44%;
+      left: 9%;
+      right: 9%;
+      bottom: 16%;
+      height: 56%;
       border-radius: 14px;
       background: rgba(255,255,255,0.28);
     }
@@ -1248,7 +1405,7 @@
 
     .point-card-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       margin: 18px 0;
     }
@@ -1495,7 +1652,7 @@
 
     .score-table {
       width: 100%;
-      min-width: 760px;
+      min-width: 1080px;
       border-collapse: collapse;
       font-size: 14px;
     }
@@ -1518,7 +1675,19 @@
     }
 
     @media (max-width: 1180px) and (orientation: landscape) {
-      :root { --piece-size: 38px; --bin-piece-size: 34px; --piece-gap: 6px; }
+      .answer-panel {
+        min-height: 78px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 8px 12px;
+      }
+
+      .answer-label { display: none; }
+      .answer-formula { justify-content: flex-start; font-size: clamp(30px, 4vw, 48px); gap: 9px; }
+      .answer-help { display: none; }
+      .answer-input { width: 86px; height: 56px; }
+      .answer-submit { min-width: 92px; min-height: 54px; font-size: 18px; }
+      :root { --piece-size: 72px; --bin-piece-size: 68px; --piece-gap: 7px; --bin-piece-gap: 7px; }
       .game-screen { padding: 10px 12px 12px; gap: 8px; }
       .mission-layout { grid-template-columns: 250px minmax(0, 1fr); gap: 10px; }
       .problem-panel { padding: 12px; gap: 9px; }
@@ -1532,7 +1701,8 @@
       .drop-zone-wrap[data-count="7"] .drop-zone,
       .drop-zone-wrap[data-count="8"] .drop-zone { min-height: 145px; }
       .zone-label { font-size: 13px; }
-      .hud-card { min-width: 75px; }
+      .hud-card { min-width: 72px; padding-left: 9px; padding-right: 9px; }
+      .timer-card { min-width: 88px; }
       .danger-btn { min-width: 96px; }
     }
 
@@ -1588,7 +1758,7 @@
           <div class="start-actions">
             <div class="team-input-wrap">
               <label for="teamNameInput">모둠 이름</label>
-              <input id="teamNameInput" type="text" maxlength="18" placeholder="예: 번개 모둠" />
+              <input id="teamNameInput" type="text" maxlength="18" placeholder="예: 번개 모둠" autocomplete="off" enterkeyhint="done" />
             </div>
             <button id="startBtn" class="primary-btn" type="button">게임 시작하기</button>
             <div class="start-note">
@@ -1607,7 +1777,7 @@
           </div>
           <div class="start-note">
             <span aria-hidden="true">🏆</span>
-            <span>레벨이 올라갈수록 점수가 커집니다. 마지막에 점수 계산 창에서 최종 점수를 확인하세요.</span>
+            <span>레벨, 숫자 크기, 해결 시간이 점수에 반영됩니다. 새로고침되어도 이어서 할 수 있어요.</span>
           </div>
         </div>
       </div>
@@ -1630,6 +1800,7 @@
         <div class="hud" aria-label="게임 정보">
           <div class="hud-card"><small>미션</small><strong id="missionHud">1/20</strong></div>
           <div class="hud-card"><small>레벨</small><strong id="levelHud">1</strong></div>
+          <div class="hud-card timer-card"><small>시간</small><strong id="timerHud">00:00</strong></div>
           <div class="hud-card"><small>점수</small><strong id="scoreHud">0</strong></div>
           <button id="endBtn" class="danger-btn" type="button">게임 종료</button>
         </div>
@@ -1654,7 +1825,7 @@
             <span>한 곳에만 몰아넣지 말고, 모든 곳의 개수를 살펴보세요. 자료를 다시 옮겨도 됩니다.</span>
           </div>
           <div class="control-row">
-            <button id="checkBtn" class="primary-btn" type="button">정답 확인</button>
+            <button id="checkBtn" class="primary-btn" type="button">답 제출</button>
             <button id="resetMissionBtn" class="secondary-btn" type="button">다시 놓기</button>
           </div>
           <div id="feedback" class="feedback info"><span aria-hidden="true">👆</span><span>자료를 드래그해서 담을 곳에 놓아 보세요.</span></div>
@@ -1670,6 +1841,15 @@
             <div id="sourceEmpty" class="source-empty">모든 자료를 옮겼어요.</div>
           </div>
           <div id="dropZones" class="drop-zone-wrap"></div>
+          <div id="answerPanel" class="answer-panel locked" aria-live="polite">
+            <div class="answer-label">나눗셈식</div>
+            <div class="answer-formula">
+              <span id="answerLeft">0 ÷ 00 =</span>
+              <input id="answerInput" class="answer-input" type="number" inputmode="numeric" min="0" max="32" placeholder="?" aria-label="답 쓰기" disabled />
+            </div>
+            <button id="answerSubmitBtn" class="primary-btn answer-submit" type="button" disabled>제출</button>
+            <div id="answerHelp" class="answer-help">모든 자료를 옮기면 답을 쓸 수 있어요.</div>
+          </div>
         </section>
       </div>
     </section>
@@ -1685,8 +1865,9 @@
       <p id="successText" class="success-text"></p>
       <div class="point-card-row">
         <div class="point-card"><small>레벨 점수</small><strong id="basePointText">+100</strong></div>
-        <div class="point-card"><small>보너스</small><strong id="bonusPointText">+20</strong></div>
-        <div class="point-card"><small>획득 점수</small><strong id="earnedPointText">+120</strong></div>
+        <div class="point-card"><small>숫자 보너스</small><strong id="numberBonusText">+40</strong></div>
+        <div class="point-card"><small>시간 보너스</small><strong id="timeBonusText">+60</strong></div>
+        <div class="point-card"><small>획득 점수</small><strong id="earnedPointText">+200</strong></div>
       </div>
       <div class="confetti-line" aria-hidden="true">✦ ★ ✹ ✦ ★ ✹</div>
       <div class="modal-actions">
@@ -1701,7 +1882,7 @@
       <p id="chooserSubtext" class="modal-subtext">고른 숫자가 다음 미션의 나누어지는 수가 됩니다. 32 이하의 숫자 카드만 나옵니다.</p>
       <div class="friend-row">
         <label for="friendNameInput">성공한 친구</label>
-        <input id="friendNameInput" type="text" maxlength="12" placeholder="이름을 쓰거나 비워 두세요" />
+        <input id="friendNameInput" type="text" maxlength="12" placeholder="이름을 쓰거나 비워 두세요" autocomplete="off" enterkeyhint="done" />
       </div>
       <div id="numberGrid" class="number-grid" aria-label="다음 숫자 선택"></div>
       <div class="chooser-actions">
@@ -1727,6 +1908,7 @@
     (() => {
       const MAX_MISSIONS = 20;
       const DIVISOR_CANDIDATES = [2, 3, 4, 5, 6, 7, 8];
+      const STORAGE_KEY = "neogeDivisionCanYouDoThis:v6";
 
       const materials = [
         { key: "baduk", name: "바둑돌", labelIcon: "●", containerClass: "plate", containerName: "접시" },
@@ -1757,8 +1939,16 @@
         current: null,
         pieces: [],
         selectedPiece: null,
-        logs: []
+        logs: [],
+        gameStarted: false,
+        pendingDividend: null,
+        timerElapsedMs: 0,
+        timerStartedAt: null,
+        timerRunning: false,
+        timerInterval: null
       };
+
+      let saveQueued = false;
 
       const $ = (id) => document.getElementById(id);
 
@@ -1768,13 +1958,24 @@
         buildProgressStrip();
         buildNumberGrid();
         attachStaticEvents();
+        updateTimerHud();
+        const restored = restoreSavedGame();
+        if (!restored) showScreen("startScreen");
       }
 
       function attachStaticEvents() {
         $("startBtn").addEventListener("click", startGame);
         $("endBtn").addEventListener("click", () => showScoreModal(false));
-        $("checkBtn").addEventListener("click", () => checkAnswer(true));
+        $("checkBtn").addEventListener("click", () => submitWrittenAnswer(true));
         $("resetMissionBtn").addEventListener("click", resetCurrentMission);
+        $("answerSubmitBtn").addEventListener("click", () => submitWrittenAnswer(true));
+        $("answerInput").addEventListener("input", handleAnswerInput);
+        $("answerInput").addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            submitWrittenAnswer(true);
+          }
+        });
         $("successNextBtn").addEventListener("click", handleSuccessNext);
         $("randomNumberBtn").addEventListener("click", () => chooseNextDividend(pick(allowedDividends)));
         $("scoreCloseBtn").addEventListener("click", () => closeModal("scoreModal"));
@@ -1784,11 +1985,70 @@
           if (event.target.closest(".piece")) return;
           if (state.selectedPiece !== null) movePiece(state.selectedPiece, "source");
         });
+
+        ["teamNameInput", "friendNameInput"].forEach((id) => {
+          const input = $(id);
+          if (!input) return;
+          input.addEventListener("input", saveStateDebounced);
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              input.blur();
+              if (id === "teamNameInput" && getActiveScreenId() === "startScreen") startGame();
+            }
+          });
+          input.addEventListener("focus", updateTimerActivity);
+          input.addEventListener("blur", () => setTimeout(updateTimerActivity, 0));
+        });
+
+        document.addEventListener("focusin", (event) => {
+          if (isTextInput(event.target)) updateTimerActivity();
+        });
+        document.addEventListener("focusout", (event) => {
+          if (isTextInput(event.target)) setTimeout(updateTimerActivity, 0);
+        });
+
+        document.addEventListener("pointerdown", (event) => {
+          blurKeyboardOnOutsideTouch(event.target);
+        }, true);
+        document.addEventListener("touchstart", (event) => {
+          blurKeyboardOnOutsideTouch(event.target);
+        }, { capture: true, passive: true });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            pauseTimer();
+            saveStateNow();
+          } else {
+            updateTimerActivity();
+          }
+        });
+
+        window.addEventListener("beforeunload", () => {
+          pauseTimer();
+          saveStateNow();
+        });
+
+        window.addEventListener("resize", () => {
+          if (!state.current) return;
+          setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
+          renderPieces();
+          saveStateDebounced();
+        });
       }
 
       function startGame() {
+        hideKeyboard();
         const typedName = $("teamNameInput").value.trim();
-        state.teamName = typedName || "부설 모둠";
+        resetStateForNewGame(typedName || "부설 모둠");
+        $("teamNameDisplay").textContent = state.teamName;
+        saveStateNow();
+        launchMission(pickInitialDividend());
+      }
+
+      function resetStateForNewGame(teamName) {
+        stopTimerInterval();
+        state.teamName = teamName;
         state.missionNo = 1;
         state.score = 0;
         state.successCount = 0;
@@ -1799,25 +2059,49 @@
         state.pieces = [];
         state.selectedPiece = null;
         state.logs = [];
-        $("teamNameDisplay").textContent = state.teamName;
-        launchMission(pickInitialDividend());
+        state.gameStarted = true;
+        state.pendingDividend = null;
+        state.timerElapsedMs = 0;
+        state.timerStartedAt = null;
+        state.timerRunning = false;
+        updateTimerHud();
       }
 
       function restartGame() {
         closeModal("scoreModal");
         closeModal("successModal");
         closeModal("chooserModal");
+        clearSavedGame();
+        resetStateForNewGame("부설 모둠");
+        state.gameStarted = false;
+        state.current = null;
+        state.pieces = [];
+        state.logs = [];
+        state.score = 0;
+        state.missionNo = 1;
+        state.successCount = 0;
+        state.streak = 0;
+        state.maxStreak = 0;
+        $("teamNameDisplay").textContent = "부설 모둠";
+        $("teamNameInput").value = "";
+        updateHud();
+        updateTimerHud();
         showScreen("startScreen");
-        $("teamNameInput").focus();
       }
 
       function launchMission(chosenDividend) {
+        pauseTimer();
+        state.pendingDividend = chosenDividend;
         showScreen("countdownScreen");
         $("countdownLabel").textContent = `${state.teamName} · 미션 ${state.missionNo}/${MAX_MISSIONS}`;
         $("countdownSub").textContent = "곧 문제가 나옵니다!";
+        saveStateNow();
         runCountdown(() => {
+          state.pendingDividend = null;
           createMission(chosenDividend);
           showScreen("gameScreen");
+          updateTimerActivity();
+          saveStateNow();
         });
       }
 
@@ -1851,6 +2135,8 @@
         ["startScreen", "countdownScreen", "gameScreen"].forEach((id) => {
           $(id).classList.toggle("active", id === activeId);
         });
+        updateTimerActivity();
+        saveStateDebounced();
       }
 
       function createMission(chosenDividend) {
@@ -1865,14 +2151,18 @@
           material,
           level,
           wrongChecks: 0,
-          solved: false
+          solved: false,
+          answer: "",
+          answerReadyNotified: false,
+          startElapsedMs: getElapsedMs()
         };
         state.pieces = Array.from({ length: dividend }, (_, id) => ({ id, place: "source" }));
         state.selectedPiece = null;
         setPieceSizing(dividend, dividend / divisor, divisor);
         renderMission();
         updateHud();
-        updateFeedback("자료를 드래그해서 담을 곳에 놓아 보세요. 한 번 누른 뒤 담을 곳을 눌러도 됩니다.", "info", "👆");
+        updateFeedback("자료를 드래그해서 담을 곳에 놓아 보세요. 모두 옮긴 뒤 아래 식의 답을 써서 제출하세요.", "info", "👆");
+        saveStateDebounced();
       }
 
       function pickInitialDividend() {
@@ -1910,20 +2200,88 @@
       }
 
       function setPieceSizing(dividend, quotient, divisor) {
-        let sourceSize = 42;
-        let binSize = 38;
-        let gap = 7;
+        const viewW = Math.max(980, window.innerWidth || 1280);
+        const viewH = Math.max(680, window.innerHeight || 800);
+        const horizontalPad = viewW <= 1180 ? 24 : Math.min(Math.max(viewW * 0.04, 24), 44);
+        const sideWidth = clampNumber(viewW * 0.22, 250, 305);
+        const layoutGap = viewW <= 1180 ? 10 : 12;
+        const playInnerWidth = Math.max(560, viewW - horizontalPad - sideWidth - layoutGap - 30);
 
-        if (dividend >= 24) { sourceSize = 37; binSize = 34; gap = 6; }
-        if (dividend >= 29) { sourceSize = 35; binSize = 32; gap = 5; }
-        if (quotient >= 12) { binSize = Math.min(binSize, 31); }
-        if (quotient >= 15) { binSize = 29; }
-        if (divisor >= 7) { binSize = Math.min(binSize, 32); }
+        const sourceRows = dividend <= 14 ? 1 : 2;
+        const sourceCols = Math.ceil(dividend / sourceRows);
+        const sourceGap = dividend >= 28 ? 7 : 8;
+        const sourceMax = dividend <= 8 ? 108 : dividend <= 14 ? 100 : dividend <= 24 ? 88 : 80;
+        const sourceByWidth = Math.floor((playInnerWidth - (sourceCols - 1) * sourceGap - 10) / sourceCols);
+        const sourceSize = Math.round(clampNumber(Math.min(sourceMax, sourceByWidth), 50, sourceMax));
+
+        const topbarHeight = viewW <= 1180 ? 54 : 58;
+        const progressHeight = 23;
+        const verticalPad = viewW <= 1180 ? 22 : 26;
+        const playHeight = Math.max(520, viewH - topbarHeight - progressHeight - verticalPad - 28);
+        const sourceLeftForSizing = Array.isArray(state.pieces)
+          ? state.pieces.filter((piece) => piece.place === "source").length
+          : dividend;
+        const sourceHeight = sourceLeftForSizing === 0
+          ? 86
+          : 42 + sourceRows * sourceSize + Math.max(0, sourceRows - 1) * sourceGap + 18;
+        const answerHeight = viewW <= 1180 ? 86 : 96;
+        const dropAvailableHeight = Math.max(220, playHeight - sourceHeight - answerHeight - 42);
+        const zoneCols = divisor <= 4 ? divisor : (divisor <= 6 ? 3 : 4);
+        const zoneRows = divisor <= 4 ? 1 : 2;
+        const zoneWidth = Math.max(150, (playInnerWidth - (zoneCols - 1) * 10) / zoneCols);
+        const zoneHeight = Math.max(130, (dropAvailableHeight - (zoneRows - 1) * 10) / zoneRows);
+        const containerHeight = Math.max(88, zoneHeight - 44);
+
+        const containerKey = state.current?.material?.containerClass || "plate";
+        const padFactor = getPadFactor(containerKey);
+        const padWidth = zoneWidth * padFactor.w;
+        const padHeight = containerHeight * padFactor.h;
+
+        let desiredBin = quotient <= 2 ? 104 : quotient <= 4 ? 96 : quotient <= 6 ? 88 : quotient <= 10 ? 80 : quotient <= 14 ? 74 : 70;
+        if (divisor >= 7) desiredBin = Math.min(desiredBin, 84);
+        if (viewW <= 1280) desiredBin = Math.min(desiredBin, quotient <= 4 ? 78 : 70);
+
+        const binSize = Math.round(findLargestFittingPiece(quotient, padWidth, padHeight, desiredBin));
+        const binGap = Math.max(5, Math.round(binSize * 0.10));
 
         const game = $("gameScreen");
         game.style.setProperty("--piece-size", `${sourceSize}px`);
         game.style.setProperty("--bin-piece-size", `${binSize}px`);
-        game.style.setProperty("--piece-gap", `${gap}px`);
+        game.style.setProperty("--piece-gap", `${sourceGap}px`);
+        game.style.setProperty("--bin-piece-gap", `${binGap}px`);
+      }
+
+      function getPadFactor(containerKey) {
+        const factors = {
+          plate: { w: 0.84, h: 0.60 },
+          tray: { w: 0.84, h: 0.60 },
+          jar: { w: 0.74, h: 0.72 },
+          fishbowl: { w: 0.74, h: 0.72 },
+          basket: { w: 0.82, h: 0.60 },
+          candybox: { w: 0.82, h: 0.60 },
+          blockbox: { w: 0.82, h: 0.60 },
+          pot: { w: 0.88, h: 0.66 },
+          balloonrack: { w: 0.88, h: 0.84 },
+          pencilcup: { w: 0.84, h: 0.76 },
+          quiver: { w: 0.84, h: 0.76 },
+          envelope: { w: 0.82, h: 0.56 }
+        };
+        return factors[containerKey] || factors.plate;
+      }
+
+      function findLargestFittingPiece(count, padWidth, padHeight, desired) {
+        for (let size = desired; size >= 46; size -= 1) {
+          const gap = Math.max(5, Math.round(size * 0.10));
+          const columns = Math.max(1, Math.floor((padWidth + gap) / (size + gap)));
+          const rows = Math.ceil(count / columns);
+          const usedHeight = rows * size + Math.max(0, rows - 1) * gap;
+          if (usedHeight <= padHeight) return size;
+        }
+        return 46;
+      }
+
+      function clampNumber(value, min, max) {
+        return Math.max(min, Math.min(max, value));
       }
 
       function renderMission() {
@@ -1933,6 +2291,7 @@
         $("materialPill").textContent = `${material.labelIcon} ${material.name}`;
         $("expressionMain").textContent = `${current.dividend} 나누기 ${current.divisor}`;
         $("expressionSub").textContent = `${current.dividend} ÷ ${current.divisor}`;
+        $("answerLeft").textContent = `${current.dividend} ÷ ${current.divisor} =`;
         $("sourceTitle").textContent = `나눌 자료 · ${material.name}`;
         $("missionSentence").innerHTML = `<strong>${current.dividend}개</strong>의 ${withJosa(material.name, "을/를")} <strong>${current.divisor}개의 ${material.containerName}</strong>에 똑같이 나누어 놓으세요.`;
 
@@ -1966,6 +2325,7 @@
         }
 
         renderPieces();
+        updateAnswerPanel();
       }
 
       function renderPieces() {
@@ -2082,6 +2442,7 @@
         } else {
           updateFeedback("자료를 다시 놓았습니다. 다른 자료를 골라 보세요.", "info", "👆");
         }
+        saveStateDebounced();
       }
 
       function movePiece(id, target) {
@@ -2092,7 +2453,12 @@
         state.selectedPiece = null;
         renderPieces();
         highlightDropTargets(false);
-        checkAnswer(false);
+        const sourceLeft = state.pieces.filter((item) => item.place === "source").length;
+        if (sourceLeft === 0 && !state.current.answerReadyNotified) {
+          state.current.answerReadyNotified = true;
+          updateFeedback("모든 자료를 옮겼어요. 아래 식의 빈칸에 답을 쓰고 제출하세요.", "info", "✏️");
+        }
+        saveStateDebounced();
       }
 
       function highlightDropTargets(on) {
@@ -2112,6 +2478,8 @@
           if (badge) badge.textContent = `${counts[index] || 0}개`;
           if (pad) pad.classList.toggle("has-items", (counts[index] || 0) > 0);
         });
+        if (state.current) setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
+        updateAnswerPanel();
       }
 
       function getBinCounts() {
@@ -2121,48 +2489,112 @@
         );
       }
 
-      function checkAnswer(manual) {
+      function handleAnswerInput() {
+        const current = state.current;
+        if (!current || current.solved) return;
+        const input = $("answerInput");
+        input.value = input.value.replace(/[^0-9]/g, "").slice(0, 2);
+        current.answer = input.value;
+        updateAnswerPanel();
+        saveStateDebounced();
+      }
+
+      function updateAnswerPanel() {
+        const panel = $("answerPanel");
+        const input = $("answerInput");
+        const button = $("answerSubmitBtn");
+        const help = $("answerHelp");
+        if (!panel || !input || !button || !help) return;
+
+        const current = state.current;
+        if (!current) {
+          panel.classList.remove("ready");
+          panel.classList.add("locked");
+          input.value = "";
+          input.disabled = true;
+          input.classList.remove("needs-answer");
+          button.disabled = true;
+          help.textContent = "모든 자료를 옮기면 답을 쓸 수 있어요.";
+          return;
+        }
+
+        const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
+        const allPlaced = sourceLeft === 0;
+        input.value = current.answer || "";
+        input.disabled = current.solved || !allPlaced;
+        button.disabled = current.solved || !allPlaced;
+        panel.classList.toggle("ready", allPlaced && !current.solved);
+        panel.classList.toggle("locked", !allPlaced || current.solved);
+        input.classList.toggle("needs-answer", allPlaced && !current.solved && !String(input.value || "").trim());
+
+        if (current.solved) {
+          help.textContent = "성공한 미션입니다.";
+        } else if (allPlaced) {
+          help.textContent = "빈칸에 답을 쓰고 제출하세요.";
+        } else {
+          help.textContent = `${sourceLeft}개를 더 옮기면 답을 쓸 수 있어요.`;
+        }
+      }
+
+      function submitWrittenAnswer(manual) {
         const current = state.current;
         if (!current || current.solved) return false;
+        hideKeyboard();
 
         const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
         const counts = getBinCounts();
-        const allSame = counts.length > 0 && counts.every((count) => count === counts[0]);
         const allPlaced = sourceLeft === 0;
-        const correct = allPlaced && allSame && counts[0] === current.quotient;
-
-        if (correct) {
-          completeMission();
-          return true;
-        }
-
-        if (manual) current.wrongChecks += 1;
+        const allSame = counts.length > 0 && counts.every((count) => count === counts[0]);
+        const input = $("answerInput");
+        const answerText = String(input.value || "").trim();
+        current.answer = answerText;
 
         if (!allPlaced) {
-          if (manual) updateFeedback(`아직 ${sourceLeft}개의 ${current.material.name}가 남아 있어요. 모두 옮겨 보세요.`, "warn", "🧺");
+          if (manual) updateFeedback(`아직 ${sourceLeft}개의 ${current.material.name}가 남아 있어요. 모두 옮긴 뒤 답을 써 보세요.`, "warn", "🧺");
+          saveStateDebounced();
           return false;
         }
 
-        if (!allSame) {
-          updateFeedback("아직 똑같이 나누어지지 않았어요. 각 담을 곳의 개수를 비교해 보세요.", "warn", "🔎");
+        if (!answerText) {
+          if (manual) updateFeedback("아래 식의 빈칸에 답을 써 주세요.", "warn", "✏️");
+          updateAnswerPanel();
+          saveStateDebounced();
           return false;
         }
 
-        updateFeedback("거의 다 왔어요. 개수를 다시 한 번 살펴보세요.", "warn", "💭");
-        return false;
+        if (!allSame || counts[0] !== current.quotient) {
+          if (manual) current.wrongChecks += 1;
+          updateFeedback("아직 똑같이 나누어지지 않았어요. 각 담을 곳의 개수를 다시 살펴보세요.", "warn", "🔎");
+          saveStateDebounced();
+          return false;
+        }
+
+        const written = Number(answerText);
+        if (!Number.isFinite(written) || written !== current.quotient) {
+          if (manual) current.wrongChecks += 1;
+          updateFeedback(`${current.dividend} ÷ ${current.divisor}의 답을 다시 생각해 보세요.`, "warn", "💭");
+          updateAnswerPanel();
+          saveStateDebounced();
+          return false;
+        }
+
+        completeMission();
+        return true;
+      }
+
+      function checkAnswer(manual) {
+        return submitWrittenAnswer(manual);
       }
 
       function completeMission() {
         const current = state.current;
         if (!current || current.solved) return;
+
+        const missionMs = Math.max(1000, getElapsedMs() - (Number(current.startElapsedMs) || 0));
         current.solved = true;
 
-        const base = levelPoint(current.level);
-        const noWrongBonus = current.wrongChecks === 0 ? 20 : 0;
-        const streakBonus = Math.min(state.streak * 10, 50);
-        const earned = base + noWrongBonus + streakBonus;
-
-        state.score += earned;
+        const points = calculateMissionPoints(current, missionMs);
+        state.score += points.earned;
         state.successCount += 1;
         state.streak += 1;
         state.maxStreak = Math.max(state.maxStreak, state.streak);
@@ -2176,25 +2608,51 @@
           material: current.material.name,
           container: current.material.containerName,
           wrongChecks: current.wrongChecks,
-          base,
-          noWrongBonus,
-          streakBonus,
-          earned,
+          missionMs,
+          targetSec: points.targetSec,
+          base: points.base,
+          noWrongBonus: points.noWrongBonus,
+          streakBonus: points.streakBonus,
+          numberBonus: points.numberBonus,
+          speedBonus: points.speedBonus,
+          earned: points.earned,
           friend: "",
           nextDividend: ""
         });
 
         updateHud();
-        updateFeedback("성공! 모든 곳에 똑같이 나누어졌어요.", "good", "🎉");
-        showSuccessModal({ base, noWrongBonus, streakBonus, earned });
+        updateAnswerPanel();
+        updateFeedback("성공! 식의 답까지 잘 썼어요.", "good", "🎉");
+        updateTimerActivity();
+        saveStateNow();
+        showSuccessModal(points);
+      }
+
+      function calculateMissionPoints(current, missionMs) {
+        const base = levelPoint(current.level);
+        const noWrongBonus = current.wrongChecks === 0 ? 20 : 0;
+        const streakBonus = Math.min(state.streak * 10, 50);
+        const numberBonus = Math.round(current.dividend * 2 + current.divisor * 10);
+        const targetSec = getTargetSeconds(current);
+        const missionSec = Math.ceil(missionMs / 1000);
+        const speedBonus = Math.max(0, Math.min(150, Math.round((targetSec - missionSec) * 3)));
+        const earned = base + noWrongBonus + streakBonus + numberBonus + speedBonus;
+        return { base, noWrongBonus, streakBonus, numberBonus, speedBonus, earned, targetSec, missionSec };
+      }
+
+      function getTargetSeconds(current) {
+        return Math.round(45 + current.level * 10 + current.divisor * 5 + current.quotient * 3 + current.dividend * 1.2);
       }
 
       function showSuccessModal(points) {
         const current = state.current;
+        const lastLog = state.logs[state.logs.length - 1];
+        const missionTime = lastLog?.missionMs || 0;
         $("successMissionLabel").textContent = `미션 ${state.missionNo}/${MAX_MISSIONS}`;
-        $("successText").innerHTML = `<strong>${current.dividend} 나누기 ${current.divisor} = ${current.quotient}</strong><br />각 ${current.material.containerName}에 ${current.quotient}개씩 들어갔어요.`;
+        $("successText").innerHTML = `<strong>${current.dividend} 나누기 ${current.divisor} = ${current.quotient}</strong><br />각 ${current.material.containerName}에 ${current.quotient}개씩 들어갔어요.<br /><span>걸린 시간 ${formatTimer(missionTime)} · 기준 시간 ${formatSeconds(points.targetSec)}</span>`;
         $("basePointText").textContent = `+${points.base}`;
-        $("bonusPointText").textContent = `+${points.noWrongBonus + points.streakBonus}`;
+        $("numberBonusText").textContent = `+${points.numberBonus}`;
+        $("timeBonusText").textContent = `+${points.speedBonus}`;
         $("earnedPointText").textContent = `+${points.earned}`;
         $("successNextBtn").textContent = state.missionNo >= MAX_MISSIONS ? "점수 계산하기" : "다음 숫자 고르기";
         openModal("successModal");
@@ -2214,7 +2672,6 @@
         $("chooserSubtext").textContent = `다음은 미션 ${state.missionNo + 1}/${MAX_MISSIONS}입니다. 성공한 친구가 숫자를 하나 골라 주세요.`;
         buildNumberGrid();
         openModal("chooserModal");
-        setTimeout(() => $("friendNameInput").focus(), 80);
       }
 
       function buildNumberGrid() {
@@ -2234,6 +2691,7 @@
       }
 
       function chooseNextDividend(num) {
+        hideKeyboard();
         const lastLog = state.logs[state.logs.length - 1];
         if (lastLog) {
           lastLog.friend = $("friendNameInput").value.trim() || "-";
@@ -2241,6 +2699,7 @@
         }
         closeModal("chooserModal");
         state.missionNo += 1;
+        saveStateNow();
         launchMission(num);
       }
 
@@ -2248,16 +2707,21 @@
         if (!state.current || state.current.solved) return;
         state.pieces = state.pieces.map((piece) => ({ ...piece, place: "source" }));
         state.selectedPiece = null;
+        state.current.answer = "";
+        state.current.answerReadyNotified = false;
         state.current.wrongChecks += 1;
         renderPieces();
+        updateAnswerPanel();
         highlightDropTargets(false);
         updateFeedback("처음 자리로 돌아왔어요. 다시 똑같이 나누어 보세요.", "info", "↩️");
+        saveStateDebounced();
       }
 
       function updateHud() {
         $("missionHud").textContent = `${state.missionNo}/${MAX_MISSIONS}`;
         $("levelHud").textContent = String(getLevel());
         $("scoreHud").textContent = state.score.toLocaleString("ko-KR");
+        updateTimerHud();
         buildProgressStrip();
       }
 
@@ -2282,10 +2746,15 @@
       }
 
       function showScoreModal(finished) {
+        hideKeyboard();
+        pauseTimer();
         const completed = state.successCount;
         const missionScore = state.score;
         const completeBonus = completed >= MAX_MISSIONS ? 300 : 0;
         const remaining = Math.max(0, MAX_MISSIONS - completed);
+        const totalTimeMs = state.logs.reduce((sum, log) => sum + (Number(log.missionMs) || 0), 0);
+        const totalSpeedBonus = state.logs.reduce((sum, log) => sum + (Number(log.speedBonus) || 0), 0);
+        const totalNumberBonus = state.logs.reduce((sum, log) => sum + (Number(log.numberBonus) || 0), 0);
         const sub = finished || completed >= MAX_MISSIONS
           ? `${state.teamName}, 20개의 미션을 모두 마쳤습니다!`
           : `${state.teamName}, 지금까지의 점수를 계산합니다. 남은 미션은 ${remaining}개입니다.`;
@@ -2295,11 +2764,13 @@
           <tr>
             <td>${log.mission}</td>
             <td>Lv.${log.level}</td>
+            <td>${escapeHtml(formatTimer(log.missionMs || 0))}</td>
             <td>${log.dividend} ÷ ${log.divisor} = ${log.quotient}</td>
             <td>${escapeHtml(log.material)}</td>
             <td>${escapeHtml(log.friend || "-")}</td>
             <td>${log.nextDividend || "-"}</td>
-            <td>${log.wrongChecks}</td>
+            <td>${Number(log.numberBonus || 0).toLocaleString("ko-KR")}</td>
+            <td>${Number(log.speedBonus || 0).toLocaleString("ko-KR")}</td>
             <td>${log.earned.toLocaleString("ko-KR")}</td>
           </tr>
         `).join("");
@@ -2307,22 +2778,23 @@
         $("scoreContent").innerHTML = `
           <div class="score-summary-grid">
             <div class="score-box"><small>성공 미션</small><strong>${completed}/${MAX_MISSIONS}</strong></div>
-            <div class="score-box"><small>최고 연속 성공</small><strong>${state.maxStreak}</strong></div>
-            <div class="score-box"><small>미션 점수</small><strong>${missionScore.toLocaleString("ko-KR")}</strong></div>
-            <div class="score-box"><small>완주 보너스</small><strong>${completeBonus.toLocaleString("ko-KR")}</strong></div>
+            <div class="score-box"><small>전체 시간</small><strong>${formatTimer(totalTimeMs)}</strong></div>
+            <div class="score-box"><small>시간 보너스</small><strong>${totalSpeedBonus.toLocaleString("ko-KR")}</strong></div>
+            <div class="score-box"><small>숫자 보너스</small><strong>${totalNumberBonus.toLocaleString("ko-KR")}</strong></div>
           </div>
           <div class="calc-card">
             <div class="calc-row"><span>미션 점수 합계</span><span class="value">${missionScore.toLocaleString("ko-KR")}점</span></div>
             <div class="calc-row"><span>20개 완주 보너스</span><span class="value">${completeBonus.toLocaleString("ko-KR")}점</span></div>
             <div class="calc-row"><span>협동 점수 직접 입력</span><span><input id="coopBonusInput" class="bonus-input" type="number" min="0" max="9999" step="10" value="0" aria-label="협동 점수" /> 점</span></div>
+            <div class="calc-row"><span>점수 계산 방법</span><span class="value">레벨 + 숫자 + 시간 + 협동</span></div>
           </div>
           <div class="final-score-line">최종 점수 <strong id="finalScoreText">${(missionScore + completeBonus).toLocaleString("ko-KR")}</strong> 점</div>
           <div class="log-wrap">
             <table class="score-table">
               <thead>
-                <tr><th>미션</th><th>레벨</th><th>문제</th><th>자료</th><th>성공 친구</th><th>고른 다음 숫자</th><th>다시 확인</th><th>획득 점수</th></tr>
+                <tr><th>미션</th><th>레벨</th><th>시간</th><th>문제</th><th>자료</th><th>성공 친구</th><th>고른 다음 숫자</th><th>숫자 보너스</th><th>시간 보너스</th><th>획득 점수</th></tr>
               </thead>
-              <tbody>${rows || `<tr><td colspan="8">아직 성공한 미션이 없습니다.</td></tr>`}</tbody>
+              <tbody>${rows || `<tr><td colspan="10">아직 성공한 미션이 없습니다.</td></tr>`}</tbody>
             </table>
           </div>
         `;
@@ -2331,6 +2803,7 @@
         input.addEventListener("input", () => {
           const bonus = Math.max(0, Number(input.value) || 0);
           $("finalScoreText").textContent = (missionScore + completeBonus + bonus).toLocaleString("ko-KR");
+          saveStateDebounced();
         });
 
         const canContinue = state.current && !state.current.solved && completed < MAX_MISSIONS;
@@ -2338,8 +2811,17 @@
         openModal("scoreModal");
       }
 
-      function openModal(id) { $(id).classList.add("open"); }
-      function closeModal(id) { $(id).classList.remove("open"); }
+      function openModal(id) {
+        $(id).classList.add("open");
+        updateTimerActivity();
+        saveStateNow();
+      }
+
+      function closeModal(id) {
+        $(id).classList.remove("open");
+        updateTimerActivity();
+        saveStateNow();
+      }
 
       function getLevel() { return Math.min(4, Math.ceil(state.missionNo / 5)); }
       function levelName(level) { return ["", "입문", "도전", "고수", "챔피언"][level] || "도전"; }
@@ -2374,6 +2856,254 @@
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
+      }
+
+      function getElapsedMs() {
+        if (!state.timerRunning || !state.timerStartedAt) return state.timerElapsedMs;
+        return state.timerElapsedMs + Math.max(0, Date.now() - state.timerStartedAt);
+      }
+
+      function resumeTimer() {
+        if (state.timerRunning) return;
+        state.timerStartedAt = Date.now();
+        state.timerRunning = true;
+        startTimerInterval();
+        updateTimerHud();
+      }
+
+      function pauseTimer() {
+        if (!state.timerRunning) {
+          stopTimerInterval();
+          updateTimerHud();
+          return;
+        }
+        state.timerElapsedMs = getElapsedMs();
+        state.timerStartedAt = null;
+        state.timerRunning = false;
+        stopTimerInterval();
+        updateTimerHud();
+      }
+
+      function startTimerInterval() {
+        stopTimerInterval();
+        state.timerInterval = window.setInterval(() => {
+          updateTimerHud();
+          saveStateDebounced();
+        }, 1000);
+      }
+
+      function stopTimerInterval() {
+        if (state.timerInterval) {
+          clearInterval(state.timerInterval);
+          state.timerInterval = null;
+        }
+      }
+
+      function updateTimerHud() {
+        const timerHud = $("timerHud");
+        if (timerHud) timerHud.textContent = formatTimer(getElapsedMs());
+      }
+
+      function updateTimerActivity() {
+        const shouldRun = Boolean(
+          state.gameStarted &&
+          state.current &&
+          !state.current.solved &&
+          getActiveScreenId() === "gameScreen" &&
+          !getOpenModalId() &&
+          !isPauseInput(document.activeElement) &&
+          !document.hidden
+        );
+        if (shouldRun) resumeTimer();
+        else pauseTimer();
+      }
+
+      function formatTimer(ms) {
+        const total = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+        const hours = Math.floor(total / 3600);
+        const minutes = Math.floor((total % 3600) / 60);
+        const seconds = total % 60;
+        if (hours > 0) return `${hours}:${pad2(minutes)}:${pad2(seconds)}`;
+        return `${pad2(minutes)}:${pad2(seconds)}`;
+      }
+
+      function formatSeconds(seconds) {
+        return formatTimer(Math.max(0, Number(seconds) || 0) * 1000);
+      }
+
+      function pad2(num) { return String(num).padStart(2, "0"); }
+
+      function isPauseInput(element) {
+        if (!element) return false;
+        return element.id === "teamNameInput" || element.id === "friendNameInput";
+      }
+
+      function isTextInput(element) {
+        if (!element) return false;
+        return element.matches?.("input, textarea, [contenteditable='true']") || false;
+      }
+
+      function hideKeyboard() {
+        const active = document.activeElement;
+        if (isTextInput(active)) active.blur();
+      }
+
+      function blurKeyboardOnOutsideTouch(target) {
+        const active = document.activeElement;
+        if (!isTextInput(active)) return;
+        if (target?.closest?.("input, textarea, [contenteditable='true']")) return;
+        active.blur();
+      }
+
+      function getActiveScreenId() {
+        return document.querySelector(".screen.active")?.id || "startScreen";
+      }
+
+      function getOpenModalId() {
+        return document.querySelector(".modal.open")?.id || "";
+      }
+
+      function makeSerializableCurrent() {
+        if (!state.current) return null;
+        const { material, ...rest } = state.current;
+        return { ...rest, materialKey: material?.key || "baduk" };
+      }
+
+      function hydrateCurrent(savedCurrent) {
+        if (!savedCurrent) return null;
+        const material = materials.find((item) => item.key === (savedCurrent.materialKey || savedCurrent.material?.key)) || materials[0];
+        const { materialKey, ...rest } = savedCurrent;
+        return { answer: "", answerReadyNotified: false, ...rest, material };
+      }
+
+      function saveStateDebounced() {
+        if (saveQueued) return;
+        saveQueued = true;
+        setTimeout(() => {
+          saveQueued = false;
+          saveStateNow();
+        }, 80);
+      }
+
+      function saveStateNow() {
+        if (!state.gameStarted && !state.current) return;
+        try {
+          const snapshot = {
+            version: 6,
+            savedAt: Date.now(),
+            teamName: state.teamName,
+            missionNo: state.missionNo,
+            score: state.score,
+            successCount: state.successCount,
+            streak: state.streak,
+            maxStreak: state.maxStreak,
+            lastMaterialKey: state.lastMaterialKey,
+            current: makeSerializableCurrent(),
+            pieces: state.pieces,
+            selectedPiece: state.selectedPiece,
+            logs: state.logs,
+            gameStarted: state.gameStarted,
+            pendingDividend: state.pendingDividend,
+            timerElapsedMs: getElapsedMs(),
+            activeScreen: getActiveScreenId(),
+            activeModal: getOpenModalId(),
+            teamInput: $("teamNameInput")?.value || "",
+            friendNameInput: $("friendNameInput")?.value || ""
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+        } catch (error) {
+          console.warn("게임 저장을 하지 못했습니다.", error);
+        }
+      }
+
+      function restoreSavedGame() {
+        let saved = null;
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          saved = JSON.parse(raw);
+        } catch (error) {
+          clearSavedGame();
+          return false;
+        }
+
+        if (!saved || saved.version !== 6 || (!saved.gameStarted && !saved.current)) return false;
+
+        stopTimerInterval();
+        state.teamName = saved.teamName || "부설 모둠";
+        state.missionNo = clampInteger(saved.missionNo, 1, MAX_MISSIONS);
+        state.score = Number(saved.score) || 0;
+        state.successCount = clampInteger(saved.successCount, 0, MAX_MISSIONS);
+        state.streak = Number(saved.streak) || 0;
+        state.maxStreak = Number(saved.maxStreak) || 0;
+        state.lastMaterialKey = saved.lastMaterialKey || null;
+        state.current = hydrateCurrent(saved.current);
+        state.pieces = Array.isArray(saved.pieces) ? saved.pieces : [];
+        state.selectedPiece = saved.selectedPiece ?? null;
+        state.logs = Array.isArray(saved.logs) ? saved.logs : [];
+        state.gameStarted = Boolean(saved.gameStarted);
+        state.pendingDividend = saved.pendingDividend || null;
+        state.timerElapsedMs = Number(saved.timerElapsedMs) || 0;
+        state.timerStartedAt = null;
+        state.timerRunning = false;
+
+        $("teamNameDisplay").textContent = state.teamName;
+        $("teamNameInput").value = saved.teamInput || state.teamName;
+        $("friendNameInput").value = saved.friendNameInput || "";
+        updateHud();
+        updateTimerHud();
+
+        if (saved.activeScreen === "countdownScreen" && state.pendingDividend && (!state.current || state.current.solved)) {
+          launchMission(state.pendingDividend);
+          return true;
+        }
+
+        if (state.current) {
+          setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
+          renderMission();
+          updateFeedback(state.current.solved ? "이 미션은 성공했습니다." : "저장된 자리에서 이어서 해 보세요.", state.current.solved ? "good" : "info", state.current.solved ? "🎉" : "💾");
+          showScreen("gameScreen");
+        } else {
+          showScreen("startScreen");
+        }
+
+        const activeModal = saved.activeModal;
+        if (state.current?.solved) {
+          const lastLog = state.logs[state.logs.length - 1];
+          if (activeModal === "scoreModal" || state.missionNo >= MAX_MISSIONS) {
+            showScoreModal(state.successCount >= MAX_MISSIONS);
+          } else if (activeModal === "chooserModal") {
+            buildNumberGrid();
+            $("chooserSubtext").textContent = `다음은 미션 ${state.missionNo + 1}/${MAX_MISSIONS}입니다. 성공한 친구가 숫자를 하나 골라 주세요.`;
+            openModal("chooserModal");
+            $("friendNameInput").value = saved.friendNameInput || "";
+          } else if (lastLog) {
+            showSuccessModal({
+              base: lastLog.base || levelPoint(lastLog.level || getLevel()),
+              noWrongBonus: lastLog.noWrongBonus || 0,
+              streakBonus: lastLog.streakBonus || 0,
+              numberBonus: lastLog.numberBonus || 0,
+              speedBonus: lastLog.speedBonus || 0,
+              earned: lastLog.earned || 0,
+              targetSec: lastLog.targetSec || getTargetSeconds(state.current)
+            });
+          }
+        } else if (activeModal === "scoreModal") {
+          showScoreModal(false);
+        }
+
+        updateTimerActivity();
+        return true;
+      }
+
+      function clearSavedGame() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (error) { /* ignore */ }
+      }
+
+      function clampInteger(value, min, max) {
+        const num = Math.round(Number(value));
+        if (!Number.isFinite(num)) return min;
+        return Math.max(min, Math.min(max, num));
       }
     })();
   </script>
