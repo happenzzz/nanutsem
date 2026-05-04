@@ -554,7 +554,7 @@
     }
 
     .expression-card {
-      padding: 14px 10px;
+      padding: 15px 14px 16px;
       border-radius: 23px;
       background: linear-gradient(145deg, #fff, #f5f9ff);
       border: 3px solid rgba(37, 62, 104, 0.12);
@@ -577,30 +577,39 @@
 
     .expression-main {
       color: var(--navy);
-      font-size: clamp(34px, 3.3vw, 54px);
-      line-height: 1.06;
-      letter-spacing: -0.07em;
+      font-size: clamp(23px, 2.05vw, 31px);
+      line-height: 1.23;
+      letter-spacing: -0.055em;
       font-weight: 1000;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: keep-all;
+    }
+
+    .expression-main strong {
+      color: var(--orange);
+      font-size: 1.08em;
+    }
+
+    .expression-main .mission-object,
+    .expression-main .mission-place {
+      color: var(--teal-dark);
     }
 
     .expression-sub {
-      margin-top: 5px;
-      color: var(--teal-dark);
-      font-size: 20px;
-      font-weight: 1000;
+      display: none;
     }
 
     .mission-sentence {
       margin: 0;
-      padding: 13px 14px;
+      padding: 12px 13px;
       border-radius: 18px;
       background: #fffbea;
       border: 2px solid rgba(255, 229, 131, 0.72);
       color: #33445f;
       font-size: 16px;
-      line-height: 1.48;
+      line-height: 1.42;
       font-weight: 850;
+      word-break: keep-all;
     }
 
     .mission-sentence strong {
@@ -749,9 +758,9 @@
     .answer-panel {
       min-height: 86px;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       padding: 10px 16px;
       border-radius: 22px;
       background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(238, 251, 255, 0.96));
@@ -764,6 +773,12 @@
       border-color: rgba(255, 139, 76, 0.56);
       background: linear-gradient(135deg, #fffdf3, #efffff);
       box-shadow: 0 0 0 5px rgba(255, 139, 76, 0.10), inset 0 -7px 0 rgba(37, 62, 104, 0.04);
+    }
+
+    .answer-panel.correct {
+      border-color: rgba(53, 190, 123, 0.72);
+      background: linear-gradient(135deg, #effdf6, #f4fffb);
+      box-shadow: 0 0 0 6px rgba(53, 190, 123, 0.12), inset 0 -7px 0 rgba(37, 62, 104, 0.04);
     }
 
     .answer-label {
@@ -786,20 +801,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 11px;
       color: var(--navy);
-      font-size: clamp(34px, 4.1vw, 58px);
+      font-size: clamp(34px, 4.2vw, 58px);
       line-height: 1;
       font-weight: 1000;
       letter-spacing: -0.055em;
       white-space: nowrap;
     }
 
+    .answer-operator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      transform: translateY(-1px);
+    }
+
     .answer-input {
-      width: clamp(88px, 9.2vw, 136px);
-      height: clamp(56px, 6vw, 68px);
+      width: clamp(78px, 7.5vw, 116px);
+      height: clamp(54px, 5.8vw, 68px);
       border-radius: 18px;
-      border: 4px solid rgba(17, 189, 200, 0.38);
+      border: 4px dashed rgba(37, 62, 104, 0.22);
       background: #ffffff;
       color: var(--teal-dark);
       text-align: center;
@@ -807,6 +830,10 @@
       line-height: 1;
       font-weight: 1000;
       box-shadow: inset 0 -5px 0 rgba(37, 62, 104, 0.06);
+    }
+
+    .answer-input.short {
+      width: clamp(68px, 6vw, 92px);
     }
 
     .answer-input::-webkit-outer-spin-button,
@@ -825,6 +852,14 @@
       animation: answerBlink 0.72s ease-in-out infinite alternate;
     }
 
+    .answer-panel.correct .answer-input {
+      border-color: rgba(53, 190, 123, 0.82);
+      border-style: solid;
+      background: #ffffff;
+      color: #087744;
+      animation: none;
+    }
+
     @keyframes answerBlink {
       from {
         border-color: rgba(255, 139, 76, 0.45);
@@ -836,6 +871,34 @@
         box-shadow: 0 0 0 7px rgba(255, 139, 76, 0.18), inset 0 -5px 0 rgba(37, 62, 104, 0.06);
         transform: translateY(-1px);
       }
+    }
+
+    .answer-result {
+      min-width: 104px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: transparent;
+      background: transparent;
+      font-size: 20px;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .answer-result.ok {
+      color: #087744;
+      background: #eafff2;
+      border: 3px solid rgba(53, 190, 123, 0.38);
+      box-shadow: 0 6px 0 rgba(53, 190, 123, 0.18);
+      animation: correctPop 0.32s ease both;
+    }
+
+    @keyframes correctPop {
+      from { transform: scale(0.82); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .answer-submit {
@@ -854,13 +917,7 @@
     }
 
     .answer-help {
-      max-width: 185px;
-      color: #526276;
-      font-size: 14px;
-      line-height: 1.32;
-      font-weight: 900;
-      text-align: right;
-      word-break: keep-all;
+      display: none;
     }
 
     .piece {
@@ -1683,15 +1740,17 @@
     @media (max-width: 1180px) and (orientation: landscape) {
       .answer-panel {
         min-height: 78px;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 9px;
         padding: 8px 12px;
       }
 
       .answer-label { display: none; }
-      .answer-formula { justify-content: flex-start; font-size: clamp(30px, 4vw, 48px); gap: 9px; }
+      .answer-formula { justify-content: center; font-size: clamp(30px, 4vw, 48px); gap: 8px; }
       .answer-help { display: none; }
-      .answer-input { width: 86px; height: 56px; }
+      .answer-input { width: 80px; height: 56px; }
+      .answer-input.short { width: 66px; }
+      .answer-result { min-width: 82px; font-size: 17px; padding: 7px 9px; }
       .answer-submit { min-width: 92px; min-height: 54px; font-size: 18px; }
       :root { --piece-size: 72px; --bin-piece-size: 68px; --piece-gap: 7px; --bin-piece-gap: 7px; }
       .game-screen { padding: 10px 12px 12px; gap: 8px; }
@@ -1699,7 +1758,7 @@
       .problem-panel { padding: 12px; gap: 9px; }
       .mission-sentence { font-size: 15px; padding: 11px 12px; }
       .tip-card { font-size: 14px; padding: 10px; }
-      .expression-main { font-size: 36px; }
+      .expression-main { font-size: 22px; line-height: 1.22; }
       .drop-zone { min-height: 154px; }
       .drop-zone-wrap[data-count="2"] .drop-zone { min-height: 220px; }
       .drop-zone-wrap[data-count="3"] .drop-zone { min-height: 202px; }
@@ -1822,8 +1881,8 @@
           </div>
           <div class="expression-card">
             <div class="expression-label">오늘의 도전</div>
-            <div id="expressionMain" class="expression-main">12 나누기 3</div>
-            <div id="expressionSub" class="expression-sub">12 ÷ 3</div>
+            <div id="expressionMain" class="expression-main">자료를 똑같이 나누어 놓으세요.</div>
+            <div id="expressionSub" class="expression-sub"></div>
           </div>
           <p id="missionSentence" class="mission-sentence"></p>
           <div class="tip-card">
@@ -1848,13 +1907,17 @@
           </div>
           <div id="dropZones" class="drop-zone-wrap"></div>
           <div id="answerPanel" class="answer-panel locked" aria-live="polite">
-            <div class="answer-label">나눗셈식</div>
-            <div class="answer-formula">
-              <span id="answerLeft">0 ÷ 00 =</span>
-              <input id="answerInput" class="answer-input" type="number" inputmode="numeric" min="0" max="32" placeholder="?" aria-label="답 쓰기" disabled />
+            <div class="answer-label">빈칸 식</div>
+            <div class="answer-formula" id="answerFormula">
+              <input id="answerDividendInput" class="answer-input" type="number" inputmode="numeric" min="0" max="32" placeholder="" aria-label="나누어지는 수 쓰기" disabled />
+              <span class="answer-operator">÷</span>
+              <input id="answerDivisorInput" class="answer-input short" type="number" inputmode="numeric" min="0" max="8" placeholder="" aria-label="나누는 수 쓰기" disabled />
+              <span class="answer-operator">=</span>
+              <input id="answerQuotientInput" class="answer-input" type="number" inputmode="numeric" min="0" max="32" placeholder="" aria-label="한 곳에 들어간 수 쓰기" disabled />
             </div>
+            <div id="answerResult" class="answer-result" aria-live="polite"></div>
             <button id="answerSubmitBtn" class="primary-btn answer-submit" type="button" disabled>제출</button>
-            <div id="answerHelp" class="answer-help">모든 자료를 옮기면 답을 쓸 수 있어요.</div>
+            <div id="answerHelp" class="answer-help">모든 자료를 옮기면 빈칸을 쓸 수 있어요.</div>
           </div>
         </section>
       </div>
@@ -1914,7 +1977,7 @@
     (() => {
       const MAX_MISSIONS = 20;
       const DIVISOR_CANDIDATES = [2, 3, 4, 5, 6, 7, 8];
-      const STORAGE_KEY = "neogeDivisionCanYouDoThis:v6";
+      const STORAGE_KEY = "neogeDivisionCanYouDoThis:v7";
 
       const materials = [
         { key: "baduk", name: "바둑돌", labelIcon: "●", containerClass: "plate", containerName: "접시" },
@@ -1976,12 +2039,14 @@
         $("checkBtn").addEventListener("click", () => submitWrittenAnswer(true));
         $("resetMissionBtn").addEventListener("click", resetCurrentMission);
         $("answerSubmitBtn").addEventListener("click", () => submitWrittenAnswer(true));
-        $("answerInput").addEventListener("input", handleAnswerInput);
-        $("answerInput").addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            submitWrittenAnswer(true);
-          }
+        getAnswerInputs().forEach((input) => {
+          input.addEventListener("input", handleAnswerInput);
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              submitWrittenAnswer(true);
+            }
+          });
         });
         $("successNextBtn").addEventListener("click", handleSuccessNext);
         $("randomNumberBtn").addEventListener("click", () => chooseNextDividend(pick(allowedDividends)));
@@ -2160,7 +2225,8 @@
           level,
           wrongChecks: 0,
           solved: false,
-          answer: "",
+          answers: emptyAnswerFields(),
+          answerCorrect: false,
           answerReadyNotified: false,
           startElapsedMs: getElapsedMs()
         };
@@ -2169,7 +2235,7 @@
         setPieceSizing(dividend, dividend / divisor, divisor);
         renderMission();
         updateHud();
-        updateFeedback("자료를 드래그해서 담을 곳에 놓아 보세요. 모두 옮긴 뒤 아래 식의 답을 써서 제출하세요.", "info", "👆");
+        updateFeedback("자료를 드래그해서 담을 곳에 놓아 보세요. 모두 옮긴 뒤 아래 빈칸 식을 채워 제출하세요.", "info", "👆");
         saveStateDebounced();
       }
 
@@ -2357,11 +2423,11 @@
         const material = current.material;
         $("levelPill").textContent = `레벨 ${current.level} · ${levelName(current.level)}`;
         $("materialPill").textContent = `${material.labelIcon} ${material.name}`;
-        $("expressionMain").textContent = `${current.dividend} 나누기 ${current.divisor}`;
-        $("expressionSub").textContent = `${current.dividend} ÷ ${current.divisor}`;
-        $("answerLeft").textContent = `${current.dividend} ÷ ${current.divisor} =`;
+        $("expressionMain").innerHTML = `<strong>${current.dividend}개</strong>의 <span class="mission-object">${escapeHtml(material.name)}</span>${withJosaEnding(material.name, "을/를")}<br /><strong>${current.divisor}개의 <span class="mission-place">${escapeHtml(material.containerName)}</span></strong>에<br />똑같이 나누어 놓으세요.`;
+        $("expressionSub").textContent = "";
         $("sourceTitle").textContent = `나눌 자료 · ${material.name}`;
-        $("missionSentence").innerHTML = `<strong>${current.dividend}개</strong>의 ${withJosa(material.name, "을/를")} <strong>${current.divisor}개의 ${material.containerName}</strong>에 똑같이 나누어 놓으세요.`;
+        $("missionSentence").innerHTML = `자료를 모두 담은 뒤, 아래 <strong>빈칸 식</strong>에 알맞은 숫자를 써서 제출하세요.`;
+        setAnswerInputLabels(current);
 
         const dropZones = $("dropZones");
         dropZones.innerHTML = "";
@@ -2524,7 +2590,7 @@
         const sourceLeft = state.pieces.filter((item) => item.place === "source").length;
         if (sourceLeft === 0 && !state.current.answerReadyNotified) {
           state.current.answerReadyNotified = true;
-          updateFeedback("모든 자료를 옮겼어요. 아래 식의 빈칸에 답을 쓰고 제출하세요.", "info", "✏️");
+          updateFeedback("모든 자료를 옮겼어요. 아래 빈칸 식에 알맞은 숫자를 쓰고 제출하세요.", "info", "✏️");
         }
         saveStateDebounced();
       }
@@ -2558,74 +2624,156 @@
         );
       }
 
-      function handleAnswerInput() {
+      function emptyAnswerFields() {
+        return { dividend: "", divisor: "", quotient: "" };
+      }
+
+      function normalizeAnswerFields(value) {
+        if (value && typeof value === "object" && !Array.isArray(value)) {
+          return {
+            dividend: String(value.dividend || ""),
+            divisor: String(value.divisor || ""),
+            quotient: String(value.quotient || value.answer || "")
+          };
+        }
+        return { dividend: "", divisor: "", quotient: String(value || "") };
+      }
+
+      function getAnswerInputs() {
+        return ["answerDividendInput", "answerDivisorInput", "answerQuotientInput"]
+          .map((id) => $(id))
+          .filter(Boolean);
+      }
+
+      function setAnswerInputLabels(current) {
+        if (!current) return;
+        const labels = {
+          answerDividendInput: `${current.material.name}의 전체 개수 쓰기`,
+          answerDivisorInput: `${current.material.containerName}의 개수 쓰기`,
+          answerQuotientInput: `한 ${current.material.containerName}에 들어간 개수 쓰기`
+        };
+        Object.entries(labels).forEach(([id, label]) => {
+          const input = $(id);
+          if (input) input.setAttribute("aria-label", label);
+        });
+      }
+
+      function readAnswerFieldsFromInputs() {
+        return {
+          dividend: String($("answerDividendInput")?.value || "").trim(),
+          divisor: String($("answerDivisorInput")?.value || "").trim(),
+          quotient: String($("answerQuotientInput")?.value || "").trim()
+        };
+      }
+
+      function writeAnswerFieldsToInputs(fields) {
+        const answers = normalizeAnswerFields(fields);
+        const map = {
+          answerDividendInput: answers.dividend,
+          answerDivisorInput: answers.divisor,
+          answerQuotientInput: answers.quotient
+        };
+        Object.entries(map).forEach(([id, value]) => {
+          const input = $(id);
+          if (input) input.value = value || "";
+        });
+      }
+
+      function handleAnswerInput(event) {
         const current = state.current;
         if (!current || current.solved) return;
-        const input = $("answerInput");
-        input.value = input.value.replace(/[^0-9]/g, "").slice(0, 2);
-        current.answer = input.value;
+        const input = event?.target;
+        if (!input) return;
+        const maxLength = input.id === "answerDivisorInput" ? 1 : 2;
+        input.value = String(input.value || "").replace(/[^0-9]/g, "").slice(0, maxLength);
+        current.answers = readAnswerFieldsFromInputs();
+        current.answer = current.answers.quotient;
+        current.answerCorrect = false;
         updateAnswerPanel();
         saveStateDebounced();
       }
 
       function updateAnswerPanel() {
         const panel = $("answerPanel");
-        const input = $("answerInput");
         const button = $("answerSubmitBtn");
         const help = $("answerHelp");
-        if (!panel || !input || !button || !help) return;
+        const result = $("answerResult");
+        const inputs = getAnswerInputs();
+        if (!panel || !button || !help || inputs.length === 0) return;
 
         const current = state.current;
         if (!current) {
-          panel.classList.remove("ready");
+          panel.classList.remove("ready", "correct");
           panel.classList.add("locked");
-          input.value = "";
-          input.disabled = true;
-          input.classList.remove("needs-answer");
+          inputs.forEach((input) => {
+            input.value = "";
+            input.disabled = true;
+            input.classList.remove("needs-answer");
+          });
           button.disabled = true;
-          help.textContent = "모든 자료를 옮기면 답을 쓸 수 있어요.";
+          help.textContent = "모든 자료를 옮기면 빈칸을 쓸 수 있어요.";
+          if (result) {
+            result.textContent = "";
+            result.classList.remove("ok");
+          }
           return;
         }
 
+        current.answers = normalizeAnswerFields(current.answers ?? current.answer);
         const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
         const allPlaced = sourceLeft === 0;
-        input.value = current.answer || "";
-        input.disabled = current.solved || !allPlaced;
-        button.disabled = current.solved || !allPlaced;
-        panel.classList.toggle("ready", allPlaced && !current.solved);
-        panel.classList.toggle("locked", !allPlaced || current.solved);
-        input.classList.toggle("needs-answer", allPlaced && !current.solved && !String(input.value || "").trim());
+        const solvedOrCorrect = Boolean(current.solved || current.answerCorrect);
+        writeAnswerFieldsToInputs(current.answers);
+
+        inputs.forEach((input) => {
+          input.disabled = solvedOrCorrect || !allPlaced;
+          input.classList.toggle("needs-answer", allPlaced && !solvedOrCorrect && !String(input.value || "").trim());
+        });
+        button.disabled = solvedOrCorrect || !allPlaced;
+        panel.classList.toggle("ready", allPlaced && !solvedOrCorrect);
+        panel.classList.toggle("locked", !allPlaced || solvedOrCorrect);
+        panel.classList.toggle("correct", solvedOrCorrect);
+
+        if (result) {
+          if (solvedOrCorrect) {
+            result.textContent = "맞았어요!";
+            result.classList.add("ok");
+          } else {
+            result.textContent = "";
+            result.classList.remove("ok");
+          }
+        }
 
         if (current.solved) {
-          help.textContent = "성공한 미션입니다.";
+          help.textContent = "맞았어요! 성공한 미션입니다.";
         } else if (allPlaced) {
-          help.textContent = "빈칸에 답을 쓰고 제출하세요.";
+          help.textContent = "세 빈칸에 알맞은 숫자를 쓰고 제출하세요.";
         } else {
-          help.textContent = `${sourceLeft}개를 더 옮기면 답을 쓸 수 있어요.`;
+          help.textContent = `${sourceLeft}개를 더 옮기면 빈칸을 쓸 수 있어요.`;
         }
       }
 
       function submitWrittenAnswer(manual) {
         const current = state.current;
-        if (!current || current.solved) return false;
+        if (!current || current.solved || current.answerCorrect) return false;
         hideKeyboard();
 
+        current.answers = readAnswerFieldsFromInputs();
+        current.answer = current.answers.quotient;
         const sourceLeft = state.pieces.filter((piece) => piece.place === "source").length;
         const counts = getBinCounts();
         const allPlaced = sourceLeft === 0;
         const allSame = counts.length > 0 && counts.every((count) => count === counts[0]);
-        const input = $("answerInput");
-        const answerText = String(input.value || "").trim();
-        current.answer = answerText;
+        const { dividend, divisor, quotient } = current.answers;
 
         if (!allPlaced) {
-          if (manual) updateFeedback(`아직 ${sourceLeft}개의 ${current.material.name}가 남아 있어요. 모두 옮긴 뒤 답을 써 보세요.`, "warn", "🧺");
+          if (manual) updateFeedback(`아직 ${sourceLeft}개의 ${current.material.name}가 남아 있어요. 모두 옮긴 뒤 빈칸을 써 보세요.`, "warn", "🧺");
           saveStateDebounced();
           return false;
         }
 
-        if (!answerText) {
-          if (manual) updateFeedback("아래 식의 빈칸에 답을 써 주세요.", "warn", "✏️");
+        if (!dividend || !divisor || !quotient) {
+          if (manual) updateFeedback("아래 빈칸 식의 세 칸을 모두 채워 주세요.", "warn", "✏️");
           updateAnswerPanel();
           saveStateDebounced();
           return false;
@@ -2633,20 +2781,31 @@
 
         if (!allSame || counts[0] !== current.quotient) {
           if (manual) current.wrongChecks += 1;
+          current.answerCorrect = false;
           updateFeedback("아직 똑같이 나누어지지 않았어요. 각 담을 곳의 개수를 다시 살펴보세요.", "warn", "🔎");
-          saveStateDebounced();
-          return false;
-        }
-
-        const written = Number(answerText);
-        if (!Number.isFinite(written) || written !== current.quotient) {
-          if (manual) current.wrongChecks += 1;
-          updateFeedback(`${current.dividend} ÷ ${current.divisor}의 답을 다시 생각해 보세요.`, "warn", "💭");
           updateAnswerPanel();
           saveStateDebounced();
           return false;
         }
 
+        const writtenDividend = Number(dividend);
+        const writtenDivisor = Number(divisor);
+        const writtenQuotient = Number(quotient);
+        const equationCorrect = writtenDividend === current.dividend && writtenDivisor === current.divisor && writtenQuotient === current.quotient;
+
+        if (!equationCorrect) {
+          if (manual) current.wrongChecks += 1;
+          current.answerCorrect = false;
+          updateFeedback("빈칸의 숫자를 다시 살펴보세요. 전체 개수, 담을 곳의 개수, 한 곳에 들어간 개수를 차례로 써요.", "warn", "💭");
+          updateAnswerPanel();
+          saveStateDebounced();
+          return false;
+        }
+
+        current.answerCorrect = true;
+        updateAnswerPanel();
+        updateFeedback("맞았어요! 빈칸 식까지 잘 완성했어요.", "good", "✅");
+        saveStateNow();
         completeMission();
         return true;
       }
@@ -2691,10 +2850,10 @@
 
         updateHud();
         updateAnswerPanel();
-        updateFeedback("성공! 식의 답까지 잘 썼어요.", "good", "🎉");
+        updateFeedback("맞았어요! 잠시 뒤 성공 표시가 나옵니다.", "good", "🎉");
         updateTimerActivity();
         saveStateNow();
-        showSuccessModal(points);
+        window.setTimeout(() => showSuccessModal(points), 520);
       }
 
       function calculateMissionPoints(current, missionMs) {
@@ -2718,7 +2877,7 @@
         const lastLog = state.logs[state.logs.length - 1];
         const missionTime = lastLog?.missionMs || 0;
         $("successMissionLabel").textContent = `미션 ${state.missionNo}/${MAX_MISSIONS}`;
-        $("successText").innerHTML = `<strong>${current.dividend} 나누기 ${current.divisor} = ${current.quotient}</strong><br />각 ${current.material.containerName}에 ${current.quotient}개씩 들어갔어요.<br /><span>걸린 시간 ${formatTimer(missionTime)} · 기준 시간 ${formatSeconds(points.targetSec)}</span>`;
+        $("successText").innerHTML = `<strong>${current.dividend}개의 ${escapeHtml(current.material.name)}를 ${current.divisor}개의 ${escapeHtml(current.material.containerName)}에 똑같이 나누었어요.</strong><br />한 ${current.material.containerName}에 ${current.quotient}개씩 들어갔어요.<br /><span>걸린 시간 ${formatTimer(missionTime)} · 기준 시간 ${formatSeconds(points.targetSec)}</span>`;
         $("basePointText").textContent = `+${points.base}`;
         $("numberBonusText").textContent = `+${points.numberBonus}`;
         $("timeBonusText").textContent = `+${points.speedBonus}`;
@@ -2776,7 +2935,9 @@
         if (!state.current || state.current.solved) return;
         state.pieces = state.pieces.map((piece) => ({ ...piece, place: "source" }));
         state.selectedPiece = null;
+        state.current.answers = emptyAnswerFields();
         state.current.answer = "";
+        state.current.answerCorrect = false;
         state.current.answerReadyNotified = false;
         state.current.wrongChecks += 1;
         renderPieces();
@@ -2834,7 +2995,7 @@
             <td>${log.mission}</td>
             <td>Lv.${log.level}</td>
             <td>${escapeHtml(formatTimer(log.missionMs || 0))}</td>
-            <td>${log.dividend} ÷ ${log.divisor} = ${log.quotient}</td>
+            <td>${log.dividend}개 → ${log.divisor}곳, 각 ${log.quotient}개</td>
             <td>${escapeHtml(log.material)}</td>
             <td>${escapeHtml(log.friend || "-")}</td>
             <td>${log.nextDividend || "-"}</td>
@@ -2915,6 +3076,11 @@
         return `${word}${hasFinalConsonant(word) ? withFinal : withoutFinal}`;
       }
 
+      function withJosaEnding(word, pair) {
+        const [withFinal, withoutFinal] = pair.split("/");
+        return hasFinalConsonant(word) ? withFinal : withoutFinal;
+      }
+
       function hasFinalConsonant(text) {
         const trimmed = text.trim();
         const last = trimmed.charCodeAt(trimmed.length - 1);
@@ -2985,6 +3151,7 @@
           state.gameStarted &&
           state.current &&
           !state.current.solved &&
+          !state.current.answerCorrect &&
           getActiveScreenId() === "gameScreen" &&
           !getOpenModalId() &&
           !isPauseInput(document.activeElement) &&
@@ -3049,7 +3216,10 @@
         if (!savedCurrent) return null;
         const material = materials.find((item) => item.key === (savedCurrent.materialKey || savedCurrent.material?.key)) || materials[0];
         const { materialKey, ...rest } = savedCurrent;
-        return { answer: "", answerReadyNotified: false, ...rest, material };
+        const hydrated = { answer: "", answers: emptyAnswerFields(), answerCorrect: false, answerReadyNotified: false, ...rest, material };
+        hydrated.answers = normalizeAnswerFields(hydrated.answers ?? hydrated.answer);
+        hydrated.answer = hydrated.answers.quotient || "";
+        return hydrated;
       }
 
       function saveStateDebounced() {
@@ -3065,7 +3235,7 @@
         if (!state.gameStarted && !state.current) return;
         try {
           const snapshot = {
-            version: 6,
+            version: 7,
             savedAt: Date.now(),
             teamName: state.teamName,
             missionNo: state.missionNo,
@@ -3103,7 +3273,7 @@
           return false;
         }
 
-        if (!saved || saved.version !== 6 || (!saved.gameStarted && !saved.current)) return false;
+        if (!saved || saved.version !== 7 || (!saved.gameStarted && !saved.current)) return false;
 
         stopTimerInterval();
         state.teamName = saved.teamName || "부설 모둠";
@@ -3137,7 +3307,12 @@
         if (state.current) {
           setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
           renderMission();
-          updateFeedback(state.current.solved ? "이 미션은 성공했습니다." : "저장된 자리에서 이어서 해 보세요.", state.current.solved ? "good" : "info", state.current.solved ? "🎉" : "💾");
+          if (state.current.answerCorrect && !state.current.solved) {
+            updateFeedback("맞았어요! 이어서 성공 표시를 준비합니다.", "good", "✅");
+            window.setTimeout(() => completeMission(), 350);
+          } else {
+            updateFeedback(state.current.solved ? "이 미션은 성공했습니다." : "저장된 자리에서 이어서 해 보세요.", state.current.solved ? "good" : "info", state.current.solved ? "🎉" : "💾");
+          }
           showScreen("gameScreen");
         } else {
           showScreen("startScreen");
