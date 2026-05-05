@@ -224,6 +224,25 @@
       min-width: 104px;
     }
 
+    .fullscreen-btn {
+      min-height: 46px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffffff, #effbff);
+      color: var(--navy);
+      border: 2px solid rgba(37, 62, 104, 0.12);
+      box-shadow: 0 7px 0 rgba(37, 62, 104, 0.12), 0 12px 18px rgba(37, 62, 104, 0.08);
+      font-size: 15px;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .fullscreen-btn.is-on {
+      background: linear-gradient(135deg, #eaffff, #cffff8);
+      color: var(--teal-dark);
+      border-color: rgba(17, 189, 200, 0.34);
+    }
+
     .mini-btn {
       min-height: 42px;
       padding: 9px 13px;
@@ -685,7 +704,8 @@
     }
 
     .source-panel {
-      min-height: 118px;
+      min-height: var(--source-panel-min-height, 118px);
+      max-height: var(--source-panel-max-height, none);
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,250,255,0.96));
       border: 3px solid rgba(37, 62, 104, 0.12);
@@ -1053,7 +1073,7 @@
     .drop-zone-wrap {
       min-height: 0;
       display: grid;
-      gap: 10px;
+      gap: var(--drop-zone-gap, 10px);
       align-content: stretch;
       overflow: hidden;
       padding: 1px 2px 3px;
@@ -1069,7 +1089,7 @@
     .drop-zone-wrap[data-count="8"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .drop-zone {
-      min-height: 170px;
+      min-height: var(--drop-zone-min-height, 170px);
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
       gap: 6px;
@@ -1737,6 +1757,281 @@
       z-index: 1;
     }
 
+
+
+    /* 갤럭시 스마트패드처럼 브라우저 상·하단바 때문에 세로 공간이 줄어드는 환경 전용 압축 배치 */
+    .game-screen.short-landscape {
+      padding: 7px 9px 8px;
+      gap: 5px;
+    }
+
+    .game-screen.short-landscape .topbar {
+      gap: 7px;
+      grid-template-columns: minmax(205px, 1fr) auto;
+    }
+
+    .game-screen.short-landscape .brand-row { gap: 7px; }
+
+    .game-screen.short-landscape .game-title-badge {
+      padding: 7px 11px;
+      border-radius: 13px;
+      font-size: 13.5px;
+      box-shadow: 0 5px 12px rgba(37, 62, 104, 0.16);
+    }
+
+    .game-screen.short-landscape .game-title-badge .bolt { font-size: 16px; }
+    .game-screen.short-landscape .team-name { font-size: 12.5px; max-width: 22vw; }
+    .game-screen.short-landscape .hud { gap: 5px; }
+
+    .game-screen.short-landscape .hud-card {
+      min-width: 63px;
+      padding: 4px 7px;
+      border-radius: 12px;
+    }
+
+    .game-screen.short-landscape .hud-card small {
+      margin-bottom: 0;
+      font-size: 9px;
+    }
+
+    .game-screen.short-landscape .hud-card strong {
+      font-size: 17px;
+      letter-spacing: -0.04em;
+    }
+
+    .game-screen.short-landscape .timer-card { min-width: 74px; }
+    .game-screen.short-landscape .danger-btn,
+    .game-screen.short-landscape .fullscreen-btn {
+      min-height: 38px;
+      padding: 8px 10px;
+      border-radius: 13px;
+      font-size: 12.5px;
+      box-shadow: 0 5px 0 rgba(37, 62, 104, 0.13), 0 8px 12px rgba(37, 62, 104, 0.06);
+    }
+
+    .game-screen.short-landscape .danger-btn {
+      box-shadow: 0 5px 0 #c9443c, 0 8px 12px rgba(242, 82, 74, 0.14);
+    }
+
+    .game-screen.short-landscape .progress-strip {
+      gap: 3px;
+      padding: 3px 4px;
+      border-radius: 10px;
+    }
+
+    .game-screen.short-landscape .progress-tile { height: 6px; }
+
+    .game-screen.short-landscape .mission-layout {
+      grid-template-columns: clamp(205px, 18.5vw, 235px) minmax(0, 1fr);
+      gap: 7px;
+    }
+
+    .game-screen.short-landscape .problem-panel {
+      padding: 9px;
+      gap: 6px;
+      border-radius: 18px;
+    }
+
+    .game-screen.short-landscape .level-pill,
+    .game-screen.short-landscape .material-pill {
+      padding: 5px 7px;
+      font-size: 11px;
+    }
+
+    .game-screen.short-landscape .expression-card {
+      padding: 9px 8px 10px;
+      border-radius: 17px;
+      border-width: 2px;
+    }
+
+    .game-screen.short-landscape .expression-label {
+      margin-bottom: 5px;
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .game-screen.short-landscape .expression-main {
+      font-size: clamp(18px, 2.05vw, 24px);
+      line-height: 1.18;
+      letter-spacing: -0.06em;
+    }
+
+    .game-screen.short-landscape .mission-sentence {
+      padding: 8px 9px;
+      border-radius: 13px;
+      font-size: 12.5px;
+      line-height: 1.34;
+    }
+
+    .game-screen.short-landscape .tip-card {
+      grid-template-columns: auto 1fr;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 13px;
+      font-size: 12px;
+      line-height: 1.32;
+    }
+
+    .game-screen.short-landscape .tip-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .game-screen.short-landscape .control-row { gap: 6px; }
+    .game-screen.short-landscape .control-row .primary-btn,
+    .game-screen.short-landscape .control-row .secondary-btn {
+      min-height: 38px;
+      padding: 7px 8px;
+      font-size: 13px;
+    }
+
+    .game-screen.short-landscape .feedback {
+      min-height: 44px;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 13px;
+      font-size: 11.5px;
+      line-height: 1.25;
+    }
+
+    .game-screen.short-landscape .play-panel {
+      gap: 6px;
+      padding: 7px;
+      border-radius: 18px;
+    }
+
+    .game-screen.short-landscape .source-panel {
+      padding: 7px 9px;
+      border-radius: 17px;
+      border-width: 2px;
+    }
+
+    .game-screen.short-landscape .source-panel.is-empty {
+      min-height: 50px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    .game-screen.short-landscape .source-header {
+      margin-bottom: 5px;
+      font-size: 12.5px;
+    }
+
+    .game-screen.short-landscape .source-count {
+      padding: 4px 7px;
+      font-size: 10.5px;
+    }
+
+    .game-screen.short-landscape .piece-grid { padding: 1px; }
+
+    .game-screen.short-landscape .drop-zone-wrap {
+      gap: var(--drop-zone-gap, 6px);
+      padding: 0 1px 1px;
+      align-content: stretch;
+    }
+
+    .game-screen.short-landscape .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="2"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="3"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="4"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="5"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="6"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="7"] .drop-zone,
+    .game-screen.short-landscape .drop-zone-wrap[data-count="8"] .drop-zone {
+      min-height: var(--drop-zone-min-height, 0px) !important;
+      padding: 5px;
+      gap: 3px;
+      border-radius: 15px;
+      border-width: 2px;
+    }
+
+    .game-screen.short-landscape .zone-label {
+      font-size: 11px;
+      line-height: 1.05;
+    }
+
+    .game-screen.short-landscape .count-badge {
+      padding: 3px 6px;
+      font-size: 10px;
+    }
+
+    .game-screen.short-landscape .container-visual {
+      min-height: 0;
+      border-radius: 13px;
+    }
+
+    .game-screen.short-landscape .drop-pad {
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .game-screen.short-landscape .empty-hint {
+      inset: 5px;
+      font-size: 10px;
+    }
+
+    .game-screen.short-landscape .answer-panel {
+      min-height: 60px;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 16px;
+      border-width: 2px;
+    }
+
+    .game-screen.short-landscape .answer-label {
+      min-width: 58px;
+      padding: 7px 9px;
+      font-size: 12px;
+      box-shadow: 0 4px 0 rgba(37, 62, 104, 0.13);
+    }
+
+    .game-screen.short-landscape .answer-formula {
+      gap: 7px;
+      font-size: clamp(27px, 4.1vw, 40px);
+    }
+
+    .game-screen.short-landscape .answer-input {
+      width: 62px;
+      height: 45px;
+      border-width: 3px;
+      border-radius: 13px;
+      font-size: 28px;
+    }
+
+    .game-screen.short-landscape .answer-input.short { width: 54px; }
+
+    .game-screen.short-landscape .answer-result {
+      min-width: 68px;
+      min-height: 34px;
+      padding: 5px 7px;
+      font-size: 14px;
+    }
+
+    .game-screen.short-landscape .answer-submit {
+      min-width: 74px;
+      min-height: 42px;
+      padding: 7px 10px;
+      font-size: 14px;
+      box-shadow: 0 5px 0 rgba(8, 131, 145, 0.20);
+    }
+
+    .game-screen.very-short-landscape .mission-layout {
+      grid-template-columns: clamp(190px, 17vw, 215px) minmax(0, 1fr);
+    }
+
+    .game-screen.very-short-landscape .expression-main { font-size: clamp(16px, 1.9vw, 21px); }
+    .game-screen.very-short-landscape .mission-sentence,
+    .game-screen.very-short-landscape .tip-card,
+    .game-screen.very-short-landscape .feedback { font-size: 10.8px; }
+    .game-screen.very-short-landscape .answer-panel { min-height: 54px; }
+    .game-screen.very-short-landscape .answer-input { width: 56px; height: 40px; font-size: 24px; }
+    .game-screen.very-short-landscape .answer-input.short { width: 48px; }
+    .game-screen.very-short-landscape .answer-formula { font-size: clamp(24px, 3.7vw, 34px); }
+
+
     @media (max-width: 1180px) and (orientation: landscape) {
       .answer-panel {
         min-height: 78px;
@@ -1825,7 +2120,10 @@
               <label for="teamNameInput">모둠 이름</label>
               <input id="teamNameInput" type="text" maxlength="18" placeholder="예: 번개 모둠" autocomplete="off" enterkeyhint="done" />
             </div>
-            <button id="startBtn" class="primary-btn" type="button">게임 시작하기</button>
+            <div style="display:grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+              <button id="startBtn" class="primary-btn" type="button">게임 시작하기</button>
+              <button id="startFullScreenBtn" class="fullscreen-btn" type="button" aria-pressed="false">⛶ 전체화면</button>
+            </div>
             <div class="start-note">
               <span aria-hidden="true">🎮</span>
               <span>자료를 드래그하거나, 자료를 한 번 누른 뒤 담을 곳을 누르면 됩니다. 성공한 친구가 다음 숫자를 골라요.</span>
@@ -1867,6 +2165,7 @@
           <div class="hud-card"><small>레벨</small><strong id="levelHud">1</strong></div>
           <div class="hud-card timer-card"><small>시간</small><strong id="timerHud">00:00</strong></div>
           <div class="hud-card"><small>점수</small><strong id="scoreHud">0</strong></div>
+          <button id="fullScreenBtn" class="fullscreen-btn" type="button" aria-pressed="false">⛶ 전체화면</button>
           <button id="endBtn" class="danger-btn" type="button">게임 종료</button>
         </div>
       </header>
@@ -2019,6 +2318,7 @@
 
       let saveQueued = false;
       let binFitQueued = false;
+      let layoutFitQueued = false;
 
       const $ = (id) => document.getElementById(id);
 
@@ -2028,6 +2328,8 @@
         buildProgressStrip();
         buildNumberGrid();
         attachStaticEvents();
+        applyViewportMode();
+        syncFullscreenButton();
         updateTimerHud();
         const restored = restoreSavedGame();
         if (!restored) showScreen("startScreen");
@@ -2036,6 +2338,8 @@
       function attachStaticEvents() {
         $("startBtn").addEventListener("click", startGame);
         $("endBtn").addEventListener("click", () => showScoreModal(false));
+        $("fullScreenBtn")?.addEventListener("click", toggleFullscreen);
+        $("startFullScreenBtn")?.addEventListener("click", toggleFullscreen);
         $("checkBtn").addEventListener("click", () => submitWrittenAnswer(true));
         $("resetMissionBtn").addEventListener("click", resetCurrentMission);
         $("answerSubmitBtn").addEventListener("click", () => submitWrittenAnswer(true));
@@ -2087,6 +2391,13 @@
           blurKeyboardOnOutsideTouch(event.target);
         }, { capture: true, passive: true });
 
+        ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"].forEach((eventName) => {
+          document.addEventListener(eventName, () => {
+            syncFullscreenButton();
+            scheduleResponsiveFit();
+          });
+        });
+
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) {
             pauseTimer();
@@ -2102,11 +2413,17 @@
         });
 
         window.addEventListener("resize", () => {
+          applyViewportMode();
           if (!state.current) return;
           setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
           renderPieces();
-          scheduleActualBinFit();
+          scheduleResponsiveFit();
           saveStateDebounced();
+        });
+
+        window.visualViewport?.addEventListener("resize", () => {
+          applyViewportMode();
+          scheduleResponsiveFit();
         });
       }
 
@@ -2208,6 +2525,8 @@
         ["startScreen", "countdownScreen", "gameScreen"].forEach((id) => {
           $(id).classList.toggle("active", id === activeId);
         });
+        applyViewportMode();
+        if (activeId === "gameScreen") scheduleResponsiveFit();
         updateTimerActivity();
         saveStateDebounced();
       }
@@ -2273,56 +2592,126 @@
         return material;
       }
 
+      function getViewportSize() {
+        const visual = window.visualViewport;
+        return {
+          viewW: Math.max(1, Math.floor(visual?.width || window.innerWidth || document.documentElement.clientWidth || 1280)),
+          viewH: Math.max(1, Math.floor(visual?.height || window.innerHeight || document.documentElement.clientHeight || 800))
+        };
+      }
+
+      function applyViewportMode() {
+        const game = $("gameScreen");
+        if (!game) return;
+        const { viewW, viewH } = getViewportSize();
+        const landscape = viewW >= viewH && viewW >= 900;
+        const shortLandscape = landscape && (viewH <= 760 || (viewH <= 820 && viewW / Math.max(viewH, 1) >= 1.62));
+        const veryShortLandscape = landscape && viewH <= 660;
+        game.classList.toggle("tablet-landscape", landscape && viewH < 920);
+        game.classList.toggle("short-landscape", shortLandscape);
+        game.classList.toggle("very-short-landscape", veryShortLandscape);
+      }
+
+      function scheduleResponsiveFit() {
+        if (layoutFitQueued) return;
+        layoutFitQueued = true;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            layoutFitQueued = false;
+            applyViewportMode();
+            if (!state.current || getActiveScreenId() !== "gameScreen") return;
+            setPieceSizing(state.current.dividend, state.current.quotient, state.current.divisor);
+            scheduleActualBinFit();
+          });
+        });
+      }
+
       function setPieceSizing(dividend, quotient, divisor) {
-        const viewW = Math.max(980, window.innerWidth || 1280);
-        const viewH = Math.max(680, window.innerHeight || 800);
-        const horizontalPad = viewW <= 1180 ? 24 : Math.min(Math.max(viewW * 0.04, 24), 44);
-        const sideWidth = clampNumber(viewW * 0.22, 250, 305);
-        const layoutGap = viewW <= 1180 ? 10 : 12;
-        const playInnerWidth = Math.max(560, viewW - horizontalPad - sideWidth - layoutGap - 30);
+        applyViewportMode();
+        const { viewW, viewH } = getViewportSize();
+        const game = $("gameScreen");
+        const playPanel = $("playPanel");
+        const sourceDrop = $("sourceDrop");
+        const dropZones = $("dropZones");
+        const answerPanel = $("answerPanel");
+        const visible = getActiveScreenId() === "gameScreen" && playPanel && playPanel.offsetWidth > 0;
+        const compact = Boolean(game?.classList.contains("short-landscape"));
+        const veryCompact = Boolean(game?.classList.contains("very-short-landscape"));
 
-        const sourceRows = dividend <= 14 ? 1 : 2;
+        const horizontalPad = compact ? 18 : (viewW <= 1180 ? 24 : Math.min(Math.max(viewW * 0.04, 24), 44));
+        const sideWidth = compact ? clampNumber(viewW * 0.185, veryCompact ? 190 : 205, veryCompact ? 215 : 235) : clampNumber(viewW * 0.22, 250, 305);
+        const layoutGap = compact ? 7 : (viewW <= 1180 ? 10 : 12);
+        const fallbackPlayWidth = Math.max(520, viewW - horizontalPad - sideWidth - layoutGap - 28);
+        const playRect = visible ? playPanel.getBoundingClientRect() : { width: fallbackPlayWidth, height: Math.max(360, viewH - 110) };
+        const playStyles = visible ? getComputedStyle(playPanel) : null;
+        const playInnerWidth = Math.max(420, playRect.width - px(playStyles?.paddingLeft || 0) - px(playStyles?.paddingRight || 0) - 4);
+        const playInnerHeight = Math.max(300, playRect.height - px(playStyles?.paddingTop || 0) - px(playStyles?.paddingBottom || 0) - 4);
+
+        const sourceStyles = visible && sourceDrop ? getComputedStyle(sourceDrop) : null;
+        const sourceWidth = visible && sourceDrop?.offsetWidth
+          ? Math.max(360, sourceDrop.getBoundingClientRect().width - px(sourceStyles?.paddingLeft || 0) - px(sourceStyles?.paddingRight || 0) - 4)
+          : playInnerWidth;
+
+        // 갤럭시 패드에서는 자료판이 3줄로 밀리면 접시·어항이 가려집니다.
+        // 그래서 전체 자료가 32개여도 되도록 2줄 안에 들어가게 실제 폭을 기준으로 크기를 다시 계산합니다.
+        const sourceRows = dividend <= 12 && !compact ? 1 : (dividend <= 10 ? 1 : 2);
         const sourceCols = Math.ceil(dividend / sourceRows);
-        const sourceGap = dividend >= 28 ? 7 : 8;
-        const sourceMax = dividend <= 8 ? 108 : dividend <= 14 ? 100 : dividend <= 24 ? 88 : 80;
-        const sourceByWidth = Math.floor((playInnerWidth - (sourceCols - 1) * sourceGap - 10) / sourceCols);
-        const sourceSize = Math.round(clampNumber(Math.min(sourceMax, sourceByWidth), 50, sourceMax));
+        const sourceGap = compact ? (dividend >= 24 ? 4 : 5) : (dividend >= 28 ? 6 : 8);
+        const maxSourceSize = compact
+          ? (dividend <= 8 ? 82 : dividend <= 14 ? 68 : dividend <= 24 ? 58 : 50)
+          : (dividend <= 8 ? 106 : dividend <= 14 ? 94 : dividend <= 24 ? 80 : 68);
+        const minSourceSize = compact ? 36 : 42;
+        const sourceChrome = compact ? 33 : 43;
+        const sourcePanelLimit = compact
+          ? clampNumber(viewH * (veryCompact ? 0.19 : 0.21), dividend >= 24 ? 118 : 96, dividend >= 24 ? 138 : 126)
+          : clampNumber(viewH * 0.25, dividend >= 24 ? 145 : 118, dividend >= 24 ? 176 : 154);
+        const sourceByWidth = Math.floor((sourceWidth - Math.max(0, sourceCols - 1) * sourceGap - 6) / sourceCols);
+        const sourceByHeight = Math.floor((sourcePanelLimit - sourceChrome - Math.max(0, sourceRows - 1) * sourceGap) / sourceRows);
+        const sourceSize = Math.round(clampNumber(Math.min(maxSourceSize, sourceByWidth, sourceByHeight), minSourceSize, maxSourceSize));
 
-        const topbarHeight = viewW <= 1180 ? 54 : 58;
-        const progressHeight = 23;
-        const verticalPad = viewW <= 1180 ? 22 : 26;
-        const playHeight = Math.max(520, viewH - topbarHeight - progressHeight - verticalPad - 28);
         const sourceLeftForSizing = Array.isArray(state.pieces)
           ? state.pieces.filter((piece) => piece.place === "source").length
           : dividend;
-        const sourceHeight = sourceLeftForSizing === 0
-          ? 86
-          : 42 + sourceRows * sourceSize + Math.max(0, sourceRows - 1) * sourceGap + 18;
-        const answerHeight = viewW <= 1180 ? 86 : 96;
-        const dropAvailableHeight = Math.max(220, playHeight - sourceHeight - answerHeight - 42);
+        const compactEmptyHeight = compact ? 50 : 78;
+        const sourceTargetHeight = sourceLeftForSizing === 0
+          ? compactEmptyHeight
+          : Math.ceil(sourceChrome + sourceRows * sourceSize + Math.max(0, sourceRows - 1) * sourceGap);
+        const cappedSourceHeight = Math.min(sourcePanelLimit + 4, Math.max(compact ? 72 : 100, sourceTargetHeight));
+
+        const answerMeasured = visible && answerPanel?.offsetHeight ? answerPanel.getBoundingClientRect().height : 0;
+        const answerHeight = Math.max(answerMeasured || 0, compact ? (veryCompact ? 54 : 60) : (viewW <= 1180 ? 78 : 86));
+        const panelGap = compact ? 6 : 9;
+        const sourceHeightForLayout = sourceLeftForSizing === 0 ? compactEmptyHeight + 8 : cappedSourceHeight + 6;
+        const dropAvailableHeight = Math.max(compact ? 112 : 170, playInnerHeight - sourceHeightForLayout - answerHeight - panelGap * 2 - 2);
         const zoneCols = divisor <= 4 ? divisor : (divisor <= 6 ? 3 : 4);
         const zoneRows = divisor <= 4 ? 1 : 2;
-        const zoneWidth = Math.max(150, (playInnerWidth - (zoneCols - 1) * 10) / zoneCols);
-        const zoneHeight = Math.max(130, (dropAvailableHeight - (zoneRows - 1) * 10) / zoneRows);
-        const containerHeight = Math.max(88, zoneHeight - 44);
+        const dropGap = compact ? 6 : 10;
+        const dropWidth = visible && dropZones?.offsetWidth ? dropZones.getBoundingClientRect().width : playInnerWidth;
+        const zoneWidth = Math.max(compact ? 108 : 150, (dropWidth - Math.max(0, zoneCols - 1) * dropGap) / zoneCols);
+        const zoneHeight = Math.max(compact ? 94 : 130, (dropAvailableHeight - Math.max(0, zoneRows - 1) * dropGap) / zoneRows);
+        const containerHeight = Math.max(compact ? 58 : 88, zoneHeight - (compact ? 28 : 44));
 
         const containerKey = state.current?.material?.containerClass || "plate";
         const padFactor = getPadFactor(containerKey);
-        const padWidth = Math.max(40, zoneWidth * padFactor.w - 24);
-        const padHeight = Math.max(40, containerHeight * padFactor.h - 24);
+        const padWidth = Math.max(34, zoneWidth * padFactor.w - (compact ? 16 : 24));
+        const padHeight = Math.max(34, containerHeight * padFactor.h - (compact ? 16 : 24));
 
         let desiredBin = quotient <= 2 ? 104 : quotient <= 4 ? 96 : quotient <= 6 ? 88 : quotient <= 10 ? 80 : quotient <= 14 ? 74 : 70;
         if (divisor >= 7) desiredBin = Math.min(desiredBin, 84);
-        if (viewW <= 1280) desiredBin = Math.min(desiredBin, quotient <= 4 ? 78 : 70);
+        if (viewW <= 1280 || compact) desiredBin = Math.min(desiredBin, quotient <= 4 ? 70 : 60);
+        if (veryCompact) desiredBin = Math.min(desiredBin, quotient <= 4 ? 58 : 50);
 
-        const binSize = Math.round(findLargestFittingPiece(quotient, padWidth, padHeight, desiredBin, 30));
-        const binGap = Math.max(4, Math.round(binSize * 0.08));
+        const binSize = Math.round(findLargestFittingPiece(quotient, padWidth, padHeight, desiredBin, compact ? 20 : 30));
+        const binGap = Math.max(2, Math.round(binSize * 0.07));
 
-        const game = $("gameScreen");
         game.style.setProperty("--piece-size", `${sourceSize}px`);
         game.style.setProperty("--bin-piece-size", `${binSize}px`);
         game.style.setProperty("--piece-gap", `${sourceGap}px`);
         game.style.setProperty("--bin-piece-gap", `${binGap}px`);
+        game.style.setProperty("--source-panel-min-height", `${sourceLeftForSizing === 0 ? compactEmptyHeight : cappedSourceHeight}px`);
+        game.style.setProperty("--source-panel-max-height", `${sourceLeftForSizing === 0 ? compactEmptyHeight + 8 : cappedSourceHeight + 6}px`);
+        game.style.setProperty("--drop-zone-min-height", `${Math.floor(zoneHeight)}px`);
+        game.style.setProperty("--drop-zone-gap", `${dropGap}px`);
       }
 
       function getPadFactor(containerKey) {
@@ -2460,6 +2849,7 @@
 
         renderPieces();
         updateAnswerPanel();
+        scheduleResponsiveFit();
       }
 
       function renderPieces() {
@@ -3196,6 +3586,39 @@
         if (!isTextInput(active)) return;
         if (target?.closest?.("input, textarea, [contenteditable='true']")) return;
         active.blur();
+      }
+
+      function isFullscreenActive() {
+        return Boolean(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+      }
+
+      async function toggleFullscreen() {
+        hideKeyboard();
+        try {
+          if (isFullscreenActive()) {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+            if (exit) await exit.call(document);
+          } else {
+            const target = document.documentElement;
+            const request = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
+            if (request) await request.call(target);
+          }
+        } catch (error) {
+          updateFeedback("브라우저에서 전체화면이 바로 켜지지 않으면, 주소창 메뉴의 전체화면 기능을 이용해 주세요.", "warn", "⛶");
+        }
+        syncFullscreenButton();
+        window.setTimeout(scheduleResponsiveFit, 120);
+      }
+
+      function syncFullscreenButton() {
+        const on = isFullscreenActive();
+        ["fullScreenBtn", "startFullScreenBtn"].forEach((id) => {
+          const button = $(id);
+          if (!button) return;
+          button.classList.toggle("is-on", on);
+          button.setAttribute("aria-pressed", on ? "true" : "false");
+          button.textContent = on ? "⛶ 전체화면 해제" : "⛶ 전체화면";
+        });
       }
 
       function getActiveScreenId() {
